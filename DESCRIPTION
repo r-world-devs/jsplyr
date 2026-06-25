@@ -1,0 +1,33 @@
+Package: jsplyr
+Title: R API to Manipulate JSON Data
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Maciej", "Banas", , "banasmaciek@gmail.com", role = c("cre", "aut")),
+    person("Krystian", "Igras", , "krystian8207@gmail.com", role = "aut")
+  )
+Description: Provides R 'shiny' interface to manipulate data in `JSON` format 
+    directly in the browser in a 'dplyr' style.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1.0)
+Imports:
+    cli,
+    dplyr,
+    glue,
+    htmltools,
+    jsonlite,
+    promises,
+    purrr,
+    rlang,
+    shiny,
+    stringr
+Suggests: 
+    knitr,
+    rmarkdown,
+    shinytest2,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

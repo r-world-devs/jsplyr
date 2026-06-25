@@ -1,0 +1,164 @@
+---
+title: "Working with collect() promises in reactive contexts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with collect() promises in reactive contexts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+`jsplyr` keeps your data in the browser, so `collect()` has to fetch it back
+over an asynchronous round-trip. Because of that, **`collect()` returns a
+[promise](https://rstudio.github.io/promises/), not a data frame**.
+
+Reactive *outputs* such as `shiny::renderTable()` or `DT::renderDT()` understand
+promises and resolve them for you, which is why a plain `collect()` inside a
+render function "just works":
+
+```{r}
+output$mtcars_tb <- DT::renderDT({
+  lazy_mtcars_query() |>
+    dplyr::collect()
+})
+```
+
+Every other reactive context — `reactive()`, `eventReactive()`,
+`observeEvent()` and `observe()` — hands you the promise as-is. The value
+resolves later, so you cannot use the result of `collect()` synchronously on the
+next line; treating it as a data frame directly gives you a promise object
+instead of your rows. You handle it with `promises::then()` or the re-exported
+`%...>%` pipe.
+
+## Two ways to unwrap a promise
+
+Both of these work in *any* context — `reactive()`, `eventReactive()`,
+`observeEvent()` and `observe()` alike. Pick whichever reads better; the next
+section covers where each context differs.
+
+### `promises::then()`
+
+`then()` registers a callback that runs once the data arrives. It returns a new
+promise, so it composes:
+
+```{r}
+lazy_mtcars_query() |>
+  dplyr::collect() |>
+  promises::then(function(df) {
+    # `df` is the collected tibble
+    head(df)
+  })
+```
+
+### `%...>%` pipe
+
+The `promises` package ships a "promise pipe", `%...>%`, that pipes the
+*resolved* value into the next expression. It reads just like a regular pipe but
+waits for the promise to settle first. `jsplyr` re-exports it, so you do **not**
+have to import `promises` yourself:
+
+```{r}
+lazy_mtcars_query() |>
+  dplyr::collect() %...>%
+  head()
+```
+
+Use `%...!%` to handle errors from the promise chain:
+
+```{r}
+lazy_mtcars_query() |>
+  dplyr::collect() %...>%
+  head() %...!%
+  (function(err) {
+    shiny::showNotification(conditionMessage(err), type = "error")
+  })
+```
+
+## Where to use it
+
+The operators above are the same everywhere. What changes between contexts is
+what you do with the resulting promise: a reactive **returns** it, an observer
+**consumes** it for its side effects.
+
+### `reactive()` / `eventReactive()` — return the promise
+
+Return the promise (optionally chained) from the reactive. Downstream consumers
+receive the promise and resolve it in turn; a render output does this
+automatically. Either operator is fine — use `%...>%` (or `then()`) when you
+want to transform the data so the reactive still returns a promise:
+
+```{r}
+# Return the promise as-is.
+collected <- shiny::reactive({
+  lazy_mtcars_query() |>
+    dplyr::collect()
+})
+
+# eventReactive works the same way — it just gates on an event first.
+collected_on_click <- shiny::eventReactive(input$go, {
+  lazy_mtcars_query() |>
+    dplyr::collect()
+})
+
+# Transform inside the reactive and still return a promise.
+collected_summary <- shiny::reactive({
+  lazy_mtcars_query() |>
+    dplyr::collect() %...>%
+    head(10)
+})
+
+# A render output resolves whichever promise it receives.
+output$mtcars_tb <- DT::renderDT({
+  collected()
+})
+```
+
+### `observeEvent()` / `observe()` — consume for side effects
+
+Observers have no return value, so resolve the promise and act on the result
+inside the callback. Again, either operator works:
+
+```{r}
+# With then().
+shiny::observeEvent(input$compute, {
+  lazy_mtcars_query() |>
+    dplyr::collect() |>
+    promises::then(function(df) {
+      print(head(df))
+      shiny::showNotification(paste(nrow(df), "rows collected"))
+    })
+})
+
+# With the pipe.
+shiny::observeEvent(input$compute, {
+  lazy_mtcars_query() |>
+    dplyr::collect() %...>%
+    head() %...>%
+    print()
+})
+```
+
+Add `%...!%` to catch errors from anywhere earlier in the chain — for example a
+failed round-trip or an error thrown while transforming the result:
+
+```{r}
+shiny::observeEvent(input$compute, {
+  lazy_mtcars_query() |>
+    dplyr::collect() %...>%
+    head() %...>%
+    print() %...!%
+    (function(err) {
+      shiny::showNotification(
+        paste("Failed to collect:", conditionMessage(err)),
+        type = "error"
+      )
+    })
+})
+```
