@@ -68,6 +68,124 @@ ui <- shiny::fluidPage(
           DT::DTOutput("summarise_table")
         )
       )
+    ),
+    # ── Arrange ───────────────────────────────────────────────────────
+    shiny::tabPanel(
+      "Arrange",
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::selectInput(
+            inputId = "arrange_col",
+            label = "Sort by",
+            choices = c("name", "age", "city", "department"),
+            selected = "age"
+          ),
+          shiny::radioButtons(
+            inputId = "arrange_dir",
+            label = "Direction",
+            choices = c("Ascending" = "asc", "Descending" = "desc"),
+            selected = "asc"
+          )
+        ),
+        shiny::mainPanel(
+          DT::DTOutput("arrange_table")
+        )
+      )
+    ),
+    # ── Slice ─────────────────────────────────────────────────────────
+    shiny::tabPanel(
+      "Slice",
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::selectInput(
+            inputId = "slice_type",
+            label = "Slice variant",
+            choices = c(
+              "slice_head" = "head",
+              "slice_tail" = "tail",
+              "slice_min" = "min",
+              "slice_max" = "max"
+            ),
+            selected = "head"
+          ),
+          shiny::numericInput(
+            inputId = "slice_n",
+            label = "Number of rows (n)",
+            value = 5,
+            min = 1
+          ),
+          shiny::selectInput(
+            inputId = "slice_col",
+            label = "Order by (min/max only)",
+            choices = c("age"),
+            selected = "age"
+          )
+        ),
+        shiny::mainPanel(
+          DT::DTOutput("slice_table")
+        )
+      )
+    ),
+    # ── Count ─────────────────────────────────────────────────────────
+    shiny::tabPanel(
+      "Count",
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::selectInput(
+            inputId = "count_col",
+            label = "Count by",
+            choices = c("city", "department"),
+            selected = "department"
+          ),
+          shiny::checkboxInput(
+            inputId = "count_sort",
+            label = "Sort by count (descending)",
+            value = TRUE
+          )
+        ),
+        shiny::mainPanel(
+          DT::DTOutput("count_table")
+        )
+      )
+    ),
+    # ── Rename & Relocate ─────────────────────────────────────────────
+    shiny::tabPanel(
+      "Rename & Relocate",
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::textInput(
+            inputId = "rename_new",
+            label = "Rename 'name' to",
+            value = "employee"
+          ),
+          shiny::selectInput(
+            inputId = "relocate_col",
+            label = "Move column to front",
+            choices = c("name", "age", "city", "department"),
+            selected = "department"
+          )
+        ),
+        shiny::mainPanel(
+          DT::DTOutput("rename_relocate_table")
+        )
+      )
+    ),
+    # ── Pull ──────────────────────────────────────────────────────────
+    shiny::tabPanel(
+      "Pull",
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::selectInput(
+            inputId = "pull_col",
+            label = "Pull column as a vector",
+            choices = c("name", "age", "city", "department"),
+            selected = "name"
+          )
+        ),
+        shiny::mainPanel(
+          shiny::verbatimTextOutput("pull_output")
+        )
+      )
     )
   )
 )
@@ -125,6 +243,75 @@ server <- function(input, output, session) {
     },
     options = dt_options
   )
+
+  # ── Arrange ──────────────────────────────────────────────────────────
+  # arrange() accepts a string key, including a "desc(col)" wrapper for
+  # descending order, so we build the sort key from the selected direction.
+  output$arrange_table <- DT::renderDT(
+    {
+      sort_key <- if (input$arrange_dir == "desc") {
+        paste0("desc(", input$arrange_col, ")")
+      } else {
+        input$arrange_col
+      }
+      json_tbl() |>
+        dplyr::arrange(sort_key) |>
+        dplyr::collect()
+    },
+    options = dt_options
+  )
+
+  # ── Slice ────────────────────────────────────────────────────────────
+  output$slice_table <- DT::renderDT(
+    {
+      tbl <- json_tbl()
+      n <- input$slice_n
+      result <- switch(
+        input$slice_type,
+        head = dplyr::slice_head(tbl, n = n),
+        tail = dplyr::slice_tail(tbl, n = n),
+        min = dplyr::slice_min(tbl, input$slice_col, n = n),
+        max = dplyr::slice_max(tbl, input$slice_col, n = n)
+      )
+      dplyr::collect(result)
+    },
+    options = dt_options
+  )
+
+  # ── Count ────────────────────────────────────────────────────────────
+  output$count_table <- DT::renderDT(
+    {
+      json_tbl() |>
+        dplyr::count(input$count_col, sort = input$count_sort) |>
+        dplyr::collect()
+    },
+    options = dt_options
+  )
+
+  # ── Rename & Relocate ────────────────────────────────────────────────
+  # The new name is dynamic, so build the `new = old` pair with setNames and
+  # pass it through do.call. relocate() then moves the chosen column to front.
+  output$rename_relocate_table <- DT::renderDT(
+    {
+      rename_args <- c(
+        list(json_tbl()),
+        stats::setNames(list("name"), input$rename_new)
+      )
+      do.call(dplyr::rename, rename_args) |>
+        dplyr::relocate(input$relocate_col) |>
+        dplyr::collect()
+    },
+    options = dt_options
+  )
+
+  # ── Pull ─────────────────────────────────────────────────────────────
+  # pull() returns a promise resolving to a vector (like collect()), so we
+  # format the resolved values for display.
+  output$pull_output <- shiny::renderPrint({
+    json_tbl() |>
+      dplyr::pull(input$pull_col) |>
+      promises::then(function(values) print(values))
+  })
 }
 
 shiny::shinyApp(ui = ui, server = server)

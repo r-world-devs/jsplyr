@@ -22,6 +22,19 @@ test_that("dots_to_arrange_query parses character inputs", {
   )
 })
 
+test_that("dots_to_arrange_query resolves a variable holding a key string", {
+  sort_key <- "desc(mpg)"
+  expect_equal(
+    dots_to_arrange_query(sort_key),
+    list(list(column = "mpg", direction = "desc"))
+  )
+  asc_key <- "cyl"
+  expect_equal(
+    dots_to_arrange_query(asc_key),
+    list(list(column = "cyl", direction = "asc"))
+  )
+})
+
 test_that("arrange adds a compute step", {
   tbl <- tbl_lazy_json(mocked_session, "test data")
   tbl <- dplyr::arrange(tbl, cyl, dplyr::desc(mpg))

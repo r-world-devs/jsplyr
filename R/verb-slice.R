@@ -108,7 +108,8 @@ slice_np_params <- function(n, prop) {
 }
 
 # Extract the single ordering column for slice_min()/slice_max() from the
-# captured `order_by` quosure.
+# captured `order_by` quosure. Accepts a bare column, a string literal, or an
+# expression that evaluates to a column-name string (e.g. a Shiny `input$...`).
 slice_order_column <- function(order_quo) {
   expr <- rlang::quo_get_expr(order_quo)
   if (rlang::quo_is_missing(order_quo) || is.null(expr)) {
@@ -118,7 +119,15 @@ slice_order_column <- function(order_quo) {
     return(expr)
   }
   if (rlang::is_symbol(expr)) {
+    resolved <- tryCatch(rlang::eval_tidy(order_quo), error = function(e) NULL)
+    if (is.character(resolved) && length(resolved) == 1) {
+      return(resolved)
+    }
     return(rlang::as_string(expr))
+  }
+  resolved <- tryCatch(rlang::eval_tidy(order_quo), error = function(e) NULL)
+  if (is.character(resolved) && length(resolved) == 1) {
+    return(resolved)
   }
   rlang::quo_text(order_quo)
 }

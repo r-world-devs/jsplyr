@@ -38,6 +38,14 @@ test_that("slice_min()/slice_max() carry the ordering column", {
   expect_equal(max_step$params$opts$n, 1L)
 })
 
+test_that("slice_min()/slice_max() resolve a variable holding a column name", {
+  tbl <- tbl_lazy_json(mocked_session, "test data")
+  order_col <- "age"
+  step <- dplyr::slice_max(tbl, order_col, n = 2)$compute_steps |>
+    (\(s) s[[length(s)]])()
+  expect_equal(step$params$opts$column, "age")
+})
+
 test_that("slice() supplying both n and prop errors", {
   tbl <- tbl_lazy_json(mocked_session, "test data")
   expect_error(dplyr::slice_head(tbl, n = 1, prop = 0.5), "only one")

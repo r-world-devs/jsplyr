@@ -36,6 +36,15 @@ dots_to_arrange_query <- function(...) {
     if (rlang::is_string(expr)) {
       return(parse_arrange_string(expr))
     }
+    if (rlang::is_symbol(expr)) {
+      # A symbol may be a bare column (use its name) or a variable holding a
+      # column-name string, possibly wrapped in "desc(...)" (resolve and parse).
+      resolved <- tryCatch(rlang::eval_tidy(dot), error = function(e) NULL)
+      if (is.character(resolved) && length(resolved) == 1) {
+        return(parse_arrange_string(resolved))
+      }
+      return(list(column = rlang::as_string(expr), direction = "asc"))
+    }
     list(column = rlang::quo_text(dot), direction = "asc")
   })
   unname(keys)
