@@ -82,7 +82,11 @@ format_compute_step <- function(step) {
     return(paste0("select(", paste0(params$expression, collapse = ", "), ")"))
   }
   if (verb == "distinct") {
-    return(paste0("distinct(", paste0(params$expression, collapse = ", "), ")"))
+    args <- paste0(params$expression, collapse = ", ")
+    if (isTRUE(params$keep_all)) {
+      args <- if (nzchar(args)) paste0(args, ", .keep_all = TRUE") else ".keep_all = TRUE"
+    }
+    return(paste0("distinct(", args, ")"))
   }
   if (verb == "group_by") {
     return(paste0("group_by(", paste0(params$expression, collapse = ", "), ")"))

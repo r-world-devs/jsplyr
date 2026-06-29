@@ -2,7 +2,7 @@ function runComputeSteps(computeSteps) {
   let jsonFrame;
   computeSteps.forEach((item) => {
     if (item.verb == "distinct") {
-      jsonFrame = distinctJSON(jsonFrame, item.params.expression);
+      jsonFrame = distinctJSON(jsonFrame, item.params.expression, item.params.keep_all);
     }
     if (item.verb == "take") {
       jsonFrame = jsonData[item.params.name];

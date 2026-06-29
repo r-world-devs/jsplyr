@@ -5,13 +5,17 @@
 \alias{distinct.tbl_lazy_json}
 \title{Keep distinct records of \code{JSON} data.}
 \usage{
-\method{distinct}{tbl_lazy_json}(.data, ...)
+\method{distinct}{tbl_lazy_json}(.data, ..., .keep_all = FALSE)
 }
 \arguments{
 \item{.data}{A \code{tbl_lazy_json} object.}
 
 \item{...}{Column names to determine uniqueness.
 If empty, all columns are used.}
+
+\item{.keep_all}{If \code{TRUE}, keep all columns in the output. When \code{FALSE}
+(the default) and columns are supplied in \code{...}, only those columns are
+returned, matching \code{\link[dplyr:distinct]{dplyr::distinct()}}.}
 }
 \description{
 Keep distinct records of \code{JSON} data.

@@ -38,6 +38,16 @@ ui <- shiny::fluidPage(
             choices = c("name", "age", "city", "department"),
             selected = "city",
             multiple = TRUE
+          ),
+          shiny::radioButtons(
+            inputId = "distinct_keep_all",
+            label = ".keep_all",
+            choices = c("FALSE" = "no", "TRUE" = "yes"),
+            selected = "no"
+          ),
+          shiny::helpText(
+            "FALSE returns only the selected columns;",
+            "TRUE keeps all columns (first row of each group)."
           )
         ),
         shiny::mainPanel(
@@ -235,7 +245,10 @@ server <- function(input, output, session) {
   # ── Distinct ─────────────────────────────────────────────────────────
   distinct_result <- shiny::reactive({
     json_tbl() |>
-      dplyr::distinct(input$distinct_columns) |>
+      dplyr::distinct(
+        input$distinct_columns,
+        .keep_all = input$distinct_keep_all == "yes"
+      ) |>
       dplyr::collect()
   })
 

@@ -18,7 +18,7 @@
       <Compute steps>
       [filter], <age >= 30>
       [select], <name>
-      [distinct], <character(0)>
+      [distinct], <character(0), FALSE>
 
 # print shows source, lazy status and pipeline
 

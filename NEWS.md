@@ -4,6 +4,7 @@
 * Added `ungroup()` to remove grouping set by `group_by()`. With no arguments all grouping is dropped; supplying column names removes only those columns from the grouping set (partial ungroup), matching `dplyr::ungroup()`.
 
 ## Fixes:
+* `distinct()` now projects to the columns supplied (e.g. `distinct(city)` returns only `city`), matching `dplyr::distinct()`. Pass `.keep_all = TRUE` to retain all columns while de-duplicating on the supplied ones. Calling `distinct()` with no columns still de-duplicates whole rows.
 * Grouping state no longer leaks across separate `compute()` calls in the same browser session. Grouping is now reset once at the start of each top-level compute, scoped so the recursive evaluation of a join's right-hand side does not clear the outer pipeline's grouping.
 
 # jsplyr 0.0.0.9002
