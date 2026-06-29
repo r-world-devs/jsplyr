@@ -5,6 +5,9 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/r-world-devs/jsplyr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-world-devs/jsplyr/actions/workflows/R-CMD-check.yaml)
+[![Lint](https://github.com/r-world-devs/jsplyr/actions/workflows/lint.yaml/badge.svg)](https://github.com/r-world-devs/jsplyr/actions/workflows/lint.yaml)
+[![Codecov test coverage](https://codecov.io/gh/r-world-devs/jsplyr/graph/badge.svg)](https://app.codecov.io/gh/r-world-devs/jsplyr)
 <!-- badges: end -->
 
 `jsplyr` is a JavaScript backend for

@@ -1,0 +1,48 @@
+# Adapted from r-world-devs/GitStats. Fails a PR when the package version in
+# DESCRIPTION has not been bumped relative to the base branch. Follow the
+# dev-version convention (*.9000) for the development line.
+name: ⬆️ Check Version Bump
+
+on:
+  pull_request:
+
+permissions: read-all
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: source
+
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: target
+
+      - name: Compare versions
+        id: compare_versions
+        run: |
+          SOURCE_VERSION=$(awk '/^Version:/ { print $2 }' source/DESCRIPTION)
+          TARGET_VERSION=$(awk '/^Version:/ { print $2 }' target/DESCRIPTION)
+          echo "Source package version: $SOURCE_VERSION"
+          echo "Target package version: $TARGET_VERSION"
+
+          if [ "$SOURCE_VERSION" == "$TARGET_VERSION" ]; then
+            echo "Versions are identical"
+            echo "versions_identical=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Versions differ"
+            echo "versions_identical=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fail if versions are identical
+        if: steps.compare_versions.outputs.versions_identical == 'true'
+        run: |
+          echo "The package version in DESCRIPTION must be bumped relative to the base branch."
+          exit 1
