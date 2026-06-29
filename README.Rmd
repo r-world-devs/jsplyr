@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/r-world-devs/jsplyr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-world-devs/jsplyr/actions/workflows/R-CMD-check.yaml)
 [![Lint](https://github.com/r-world-devs/jsplyr/actions/workflows/lint.yaml/badge.svg)](https://github.com/r-world-devs/jsplyr/actions/workflows/lint.yaml)
 [![Codecov test coverage](https://codecov.io/gh/r-world-devs/jsplyr/graph/badge.svg)](https://app.codecov.io/gh/r-world-devs/jsplyr)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/jsplyr)](https://cran.r-project.org/package=jsplyr)
 <!-- badges: end -->
 
 `jsplyr` is a JavaScript backend for [dplyr](https://github.com/tidyverse/dplyr/). Instead of manipulating data on the Shiny server, it pushes the work to the browser, where it runs on JSON data client-side. This keeps data wrangling fast and responsive even for large `data.frame`s, while letting you write the familiar dplyr verbs you already know.
