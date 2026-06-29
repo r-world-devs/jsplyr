@@ -1,3 +1,9 @@
+# jsplyr 0.0.0.9002
+
+## Documentation:
+* Extended `vignette("collect-with-promises")` with a worked example of setting a `selectInput` value from a number computed in the browser, showing how to keep `updateSelectInput()` outside the `jsplyr` pipeline using either a `reactiveVal` or an `eventReactive()`. Replaced the abstract context matrix with this concrete example.
+* Added the `app_update_select.R` example app demonstrating both approaches, and removed `app_collect_promises.R`.
+
 # jsplyr 0.0.0.9001
 
 ## CI/CD:
