@@ -1,3 +1,9 @@
+# jsplyr 0.0.0.9001
+
+## CI/CD:
+* Added GitHub Actions workflows for linting (`lintr::lint_package()`), a standalone `testthat` run for fast PR feedback, test coverage reporting via `covr` with Codecov upload, and a version-bump check that fails PRs which do not bump the `DESCRIPTION` `Version`.
+* Added R-CMD-check, Lint, and Codecov badges to the README.
+
 # jsplyr 0.0.0.9000
 
 * Initial development version.
