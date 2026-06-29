@@ -46,6 +46,7 @@ reference:
 - subtitle: Group and summarise
 - contents:
   - group_by.tbl_lazy_json
+  - ungroup.tbl_lazy_json
   - summarise.tbl_lazy_json
   - count.tbl_lazy_json
 

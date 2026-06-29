@@ -1,3 +1,11 @@
+# jsplyr 0.0.0.9003
+
+## Verbs:
+* Added `ungroup()` to remove grouping set by `group_by()`. With no arguments all grouping is dropped; supplying column names removes only those columns from the grouping set (partial ungroup), matching `dplyr::ungroup()`.
+
+## Fixes:
+* Grouping state no longer leaks across separate `compute()` calls in the same browser session. Grouping is now reset once at the start of each top-level compute, scoped so the recursive evaluation of a join's right-hand side does not clear the outer pipeline's grouping.
+
 # jsplyr 0.0.0.9002
 
 ## Verbs:

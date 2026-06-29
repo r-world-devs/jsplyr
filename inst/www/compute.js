@@ -16,6 +16,9 @@ function runComputeSteps(computeSteps) {
     if (item.verb === "group_by") {
       groupByJSON(item.params.expression);
     }
+    if (item.verb === "ungroup") {
+      ungroupJSON(item.params.columns);
+    }
     if (item.verb === "summarise") {
       jsonFrame = summariseJSON(jsonFrame, item.params.expressions);
     }
@@ -51,6 +54,11 @@ function runComputeSteps(computeSteps) {
 }
 
 function computeLazyJSON(params) {
+  // Scope grouping state to this top-level compute so it cannot leak from a
+  // previous pipeline. The reset lives here, not in runComputeSteps, so the
+  // recursive call for a join's right-hand side does not clobber the outer
+  // pipeline's grouping.
+  groupByColumns = [];
   let jsonFrame = runComputeSteps(params.compute_steps);
   outputDataId = params.state_id;
   jsonData[outputDataId] = jsonFrame;

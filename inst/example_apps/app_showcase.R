@@ -186,6 +186,27 @@ ui <- shiny::fluidPage(
           shiny::verbatimTextOutput("pull_output")
         )
       )
+    ),
+    # ── Ungroup ───────────────────────────────────────────────────────
+    shiny::tabPanel(
+      "Ungroup",
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::checkboxInput(
+            inputId = "ungroup_apply",
+            label = "Call ungroup() before slicing",
+            value = FALSE
+          ),
+          shiny::helpText(
+            "Pipeline: group_by(city) |> slice_max(age, n = 1).",
+            "Grouped, slice_max() keeps the oldest person per city.",
+            "After ungroup() it keeps a single oldest person overall."
+          )
+        ),
+        shiny::mainPanel(
+          DT::DTOutput("ungroup_table")
+        )
+      )
     )
   )
 )
@@ -312,6 +333,24 @@ server <- function(input, output, session) {
       dplyr::pull(input$pull_col) |>
       promises::then(function(values) print(values))
   })
+
+  # ── Ungroup ──────────────────────────────────────────────────────────
+  # slice_max() retains grouping (like dplyr), so a grouped pipeline yields one
+  # row per group. Inserting ungroup() clears the grouping, so the same
+  # slice_max() returns a single row overall — making ungroup()'s effect visible.
+  output$ungroup_table <- DT::renderDT(
+    {
+      tbl <- json_tbl() |>
+        dplyr::group_by("city")
+      if (isTRUE(input$ungroup_apply)) {
+        tbl <- dplyr::ungroup(tbl)
+      }
+      tbl |>
+        dplyr::slice_max("age", n = 1) |>
+        dplyr::collect()
+    },
+    options = dt_options
+  )
 }
 
 shiny::shinyApp(ui = ui, server = server)

@@ -87,6 +87,9 @@ format_compute_step <- function(step) {
   if (verb == "group_by") {
     return(paste0("group_by(", paste0(params$expression, collapse = ", "), ")"))
   }
+  if (verb == "ungroup") {
+    return(paste0("ungroup(", paste0(unlist(params$columns), collapse = ", "), ")"))
+  }
   if (verb == "mutate") {
     args <- purrr::map_chr(params$expressions, function(e) {
       paste0(e$name, " = ", e$expression)

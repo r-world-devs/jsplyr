@@ -16,6 +16,7 @@ include_jsplyr <- function() {
       "example_data.js",
       "filter.js",
       "group_by.js",
+      "ungroup.js",
       "join.js",
       "mutate.js",
       "select.js",
