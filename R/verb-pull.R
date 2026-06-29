@@ -7,6 +7,8 @@
 #' @param var The column to extract. A bare name, a string, or a position.
 #'   Positive positions count from the left; negative positions count from the
 #'   right (e.g. `-1` is the last column), matching [dplyr::pull()].
+#' @param name Ignored. Accepted for consistency with the generic; named
+#'   vectors are not produced for `tbl_lazy_json`.
 #' @param ... Unused. Provided for consistency with the generic.
 #' @return A promise resolving to a vector with the column's values.
 #' @examples
@@ -17,7 +19,7 @@
 #' @importFrom dplyr pull
 #' @importFrom promises then
 #' @export
-pull.tbl_lazy_json <- function(.data, var = -1, ...) {
+pull.tbl_lazy_json <- function(.data, var = -1, name = NULL, ...) {
   var_expr <- rlang::enquo(var)
   spec <- pull_var_spec(var_expr)
 

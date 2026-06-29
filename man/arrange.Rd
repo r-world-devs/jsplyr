@@ -5,7 +5,7 @@
 \alias{arrange.tbl_lazy_json}
 \title{Arrange rows of \code{JSON} data by column values.}
 \usage{
-\method{arrange}{tbl_lazy_json}(.data, ...)
+\method{arrange}{tbl_lazy_json}(.data, ..., .by_group = FALSE)
 }
 \arguments{
 \item{.data}{A \code{tbl_lazy_json} object.}
@@ -13,6 +13,9 @@
 \item{...}{Columns to sort by. Wrap a column in \code{dplyr::desc()} to sort it
 in descending order. Multiple columns break ties left to right. Bare
 column names and character strings are both accepted.}
+
+\item{.by_group}{Ignored. Accepted for consistency with the generic;
+grouped arrange ordering is not applied for \code{tbl_lazy_json}.}
 }
 \description{
 Arrange rows of \code{JSON} data by column values.

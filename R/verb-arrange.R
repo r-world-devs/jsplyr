@@ -4,6 +4,8 @@
 #' @param ... Columns to sort by. Wrap a column in `dplyr::desc()` to sort it
 #'   in descending order. Multiple columns break ties left to right. Bare
 #'   column names and character strings are both accepted.
+#' @param .by_group Ignored. Accepted for consistency with the generic;
+#'   grouped arrange ordering is not applied for `tbl_lazy_json`.
 #' @details Sorting happens in the browser and is stable across ties, so the
 #'   original row order is preserved within equal keys.
 #' @examples
@@ -13,7 +15,7 @@
 #' }
 #' @importFrom dplyr arrange
 #' @export
-arrange.tbl_lazy_json <- function(.data, ...) {
+arrange.tbl_lazy_json <- function(.data, ..., .by_group = FALSE) {
   keys <- dots_to_arrange_query(...)
   .data$compute_steps <- add_arrange(.data, keys)
   .data$state_id <- generate_id()

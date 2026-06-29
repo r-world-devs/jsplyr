@@ -5,7 +5,7 @@
 \alias{pull.tbl_lazy_json}
 \title{Extract a single column from \code{JSON} data as a vector.}
 \usage{
-\method{pull}{tbl_lazy_json}(.data, var = -1, ...)
+\method{pull}{tbl_lazy_json}(.data, var = -1, name = NULL, ...)
 }
 \arguments{
 \item{.data}{A \code{tbl_lazy_json} object.}
@@ -13,6 +13,9 @@
 \item{var}{The column to extract. A bare name, a string, or a position.
 Positive positions count from the left; negative positions count from the
 right (e.g. \code{-1} is the last column), matching \code{\link[dplyr:pull]{dplyr::pull()}}.}
+
+\item{name}{Ignored. Accepted for consistency with the generic; named
+vectors are not produced for \code{tbl_lazy_json}.}
 
 \item{...}{Unused. Provided for consistency with the generic.}
 }

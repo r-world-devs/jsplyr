@@ -5,12 +5,18 @@
 #'   applied within each group.
 #' @param .data A `tbl_lazy_json` object.
 #' @param ... For `slice()`, integer row positions to keep (1-based). Negative
-#'   positions drop rows. For `slice_min()`/`slice_max()`, the bare column to
-#'   order by.
+#'   positions drop rows. Unused by the other variants.
+#' @param order_by For `slice_min()`/`slice_max()`, the column to order by
+#'   (bare name or string).
 #' @param n Number of rows to keep. Used by `slice_head()`, `slice_tail()`,
 #'   `slice_min()`, and `slice_max()`. Defaults to 1 where applicable.
 #' @param prop Proportion of rows to keep (0-1), an alternative to `n` for
 #'   `slice_head()`/`slice_tail()`/`slice_min()`/`slice_max()`.
+#' @param by,.by Ignored. Accepted for consistency with the generics; per-call
+#'   grouping is not applied (use [group_by()], which slicing respects).
+#' @param .preserve Ignored. Accepted for consistency with the generic.
+#' @param with_ties,na_rm Ignored. Accepted for consistency with the
+#'   `slice_min()`/`slice_max()` generics.
 #' @details All slicing is evaluated in the browser. `slice_min()`/`slice_max()`
 #'   order rows by the given column (ascending for min, descending for max) and
 #'   keep the first `n` (or `prop`).
@@ -22,7 +28,7 @@
 #' }
 #' @importFrom dplyr slice
 #' @export
-slice.tbl_lazy_json <- function(.data, ...) {
+slice.tbl_lazy_json <- function(.data, ..., .by = NULL, .preserve = FALSE) {
   positions <- unlist(rlang::list2(...), use.names = FALSE)
   positions <- as.integer(positions)
   .data$compute_steps <- add_slice(
@@ -37,7 +43,7 @@ slice.tbl_lazy_json <- function(.data, ...) {
 #' @rdname slice
 #' @importFrom dplyr slice_head
 #' @export
-slice_head.tbl_lazy_json <- function(.data, ..., n, prop) {
+slice_head.tbl_lazy_json <- function(.data, ..., n, prop, by = NULL) {
   .data$compute_steps <- add_slice(
     .data,
     type = "slice_head",
@@ -50,7 +56,7 @@ slice_head.tbl_lazy_json <- function(.data, ..., n, prop) {
 #' @rdname slice
 #' @importFrom dplyr slice_tail
 #' @export
-slice_tail.tbl_lazy_json <- function(.data, ..., n, prop) {
+slice_tail.tbl_lazy_json <- function(.data, ..., n, prop, by = NULL) {
   .data$compute_steps <- add_slice(
     .data,
     type = "slice_tail",
@@ -63,8 +69,9 @@ slice_tail.tbl_lazy_json <- function(.data, ..., n, prop) {
 #' @rdname slice
 #' @importFrom dplyr slice_min
 #' @export
-slice_min.tbl_lazy_json <- function(.data, ..., n, prop) {
-  column <- slice_order_column(...)
+slice_min.tbl_lazy_json <- function(.data, order_by, ..., n, prop, by = NULL,
+                                    with_ties = TRUE, na_rm = FALSE) {
+  column <- slice_order_column(rlang::enquo(order_by))
   opts <- c(list(column = column), slice_np_params(n, prop))
   .data$compute_steps <- add_slice(.data, type = "slice_min", opts = opts)
   .data$state_id <- generate_id()
@@ -74,8 +81,9 @@ slice_min.tbl_lazy_json <- function(.data, ..., n, prop) {
 #' @rdname slice
 #' @importFrom dplyr slice_max
 #' @export
-slice_max.tbl_lazy_json <- function(.data, ..., n, prop) {
-  column <- slice_order_column(...)
+slice_max.tbl_lazy_json <- function(.data, order_by, ..., n, prop, by = NULL,
+                                    with_ties = TRUE, na_rm = FALSE) {
+  column <- slice_order_column(rlang::enquo(order_by))
   opts <- c(list(column = column), slice_np_params(n, prop))
   .data$compute_steps <- add_slice(.data, type = "slice_max", opts = opts)
   .data$state_id <- generate_id()
@@ -99,20 +107,20 @@ slice_np_params <- function(n, prop) {
   list(n = 1L)
 }
 
-# Extract the single ordering column for slice_min()/slice_max() from the dots.
-slice_order_column <- function(...) {
-  dots <- rlang::enquos(...)
-  if (length(dots) < 1) {
-    cli::cli_abort("`slice_min()`/`slice_max()` require an ordering column.")
+# Extract the single ordering column for slice_min()/slice_max() from the
+# captured `order_by` quosure.
+slice_order_column <- function(order_quo) {
+  expr <- rlang::quo_get_expr(order_quo)
+  if (rlang::quo_is_missing(order_quo) || is.null(expr)) {
+    cli::cli_abort("`slice_min()`/`slice_max()` require an {.arg order_by} column.")
   }
-  expr <- rlang::quo_get_expr(dots[[1]])
   if (rlang::is_string(expr)) {
     return(expr)
   }
   if (rlang::is_symbol(expr)) {
     return(rlang::as_string(expr))
   }
-  rlang::quo_text(dots[[1]])
+  rlang::quo_text(order_quo)
 }
 
 add_slice <- function(.data, type, opts) {

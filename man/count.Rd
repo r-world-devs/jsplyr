@@ -6,19 +6,22 @@
 \alias{tally.tbl_lazy_json}
 \title{Count observations in \code{JSON} data.}
 \usage{
-\method{count}{tbl_lazy_json}(.data, ..., name = "n", sort = FALSE)
+\method{count}{tbl_lazy_json}(x, ..., wt = NULL, sort = FALSE, name = NULL)
 
-\method{tally}{tbl_lazy_json}(x, ..., name = "n", sort = FALSE)
+\method{tally}{tbl_lazy_json}(x, wt = NULL, sort = FALSE, name = NULL)
 }
 \arguments{
-\item{.data, x}{A \code{tbl_lazy_json} object.}
+\item{x}{A \code{tbl_lazy_json} object.}
 
 \item{...}{Columns to group by before counting (for \code{count()}). Accepts the
 same inputs as \code{\link[=group_by]{group_by()}}.}
 
-\item{name}{Name of the count column in the output. Defaults to \code{"n"}.}
+\item{wt}{Not supported; weighted counts are not implemented for
+\code{tbl_lazy_json}. Supplying a non-\code{NULL} value raises an error.}
 
 \item{sort}{If \code{TRUE}, order the result by the count column descending.}
+
+\item{name}{Name of the count column in the output. \code{NULL} uses \code{"n"}.}
 }
 \description{
 \code{count()} groups the data by the given columns and counts the
