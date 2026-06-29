@@ -102,9 +102,52 @@ format_compute_step <- function(step) {
   if (verb == "join") {
     return(paste0(params$type, "_join(", format_join_by(params$by), ")"))
   }
+  if (verb == "arrange") {
+    args <- purrr::map_chr(params$keys, function(k) {
+      if (identical(k$direction, "desc")) paste0("desc(", k$column, ")") else k$column
+    })
+    return(paste0("arrange(", paste0(args, collapse = ", "), ")"))
+  }
+  if (verb == "rename") {
+    args <- purrr::map_chr(params$pairs, function(p) paste0(p$new, " = ", p$old))
+    return(paste0("rename(", paste0(args, collapse = ", "), ")"))
+  }
+  if (verb == "slice") {
+    return(paste0(params$type, "(", format_slice_opts(params$type, params$opts), ")"))
+  }
+  if (verb == "relocate") {
+    return(paste0("relocate(", format_relocate(params), ")"))
+  }
+  if (verb == "pull") {
+    return(paste0("pull(", params$value, ")"))
+  }
 
   # Fallback for any unrecognised verb.
   paste0(verb, "()")
+}
+
+# Render the parameters of a slice step for printing.
+format_slice_opts <- function(type, opts) {
+  if (type == "slice") {
+    return(paste0(unlist(opts$positions), collapse = ", "))
+  }
+  prefix <- if (type %in% c("slice_min", "slice_max")) paste0(opts$column, ", ") else ""
+  if (!is.null(opts$prop)) {
+    return(paste0(prefix, "prop = ", opts$prop))
+  }
+  paste0(prefix, "n = ", opts$n)
+}
+
+# Render the parameters of a relocate step for printing.
+format_relocate <- function(params) {
+  cols <- paste0(unlist(params$columns), collapse = ", ")
+  if (!is.null(params$before)) {
+    return(paste0(cols, ", .before = ", params$before))
+  }
+  if (!is.null(params$after)) {
+    return(paste0(cols, ", .after = ", params$after))
+  }
+  cols
 }
 
 # Render the `by` argument of a join step for printing.

@@ -26,6 +26,26 @@ function runComputeSteps(computeSteps) {
       let rightFrame = runComputeSteps(item.params.y_steps);
       jsonFrame = joinJSON(jsonFrame, rightFrame, item.params.by, item.params.type);
     }
+    if (item.verb === "arrange") {
+      jsonFrame = arrangeJSON(jsonFrame, item.params.keys);
+    }
+    if (item.verb === "rename") {
+      jsonFrame = renameJSON(jsonFrame, item.params.pairs);
+    }
+    if (item.verb === "slice") {
+      jsonFrame = sliceJSON(jsonFrame, item.params.type, item.params.opts);
+    }
+    if (item.verb === "relocate") {
+      jsonFrame = relocateJSON(
+        jsonFrame,
+        item.params.columns,
+        item.params.before,
+        item.params.after
+      );
+    }
+    if (item.verb === "pull") {
+      jsonFrame = pullJSON(jsonFrame, item.params.by, item.params.value);
+    }
   });
   return jsonFrame;
 }

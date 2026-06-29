@@ -20,6 +20,11 @@ include_jsplyr <- function() {
       "mutate.js",
       "select.js",
       "summarise.js",
+      "arrange.js",
+      "rename.js",
+      "relocate.js",
+      "pull.js",
+      "slice.js",
       "compute.js"
     )
   )
