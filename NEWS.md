@@ -9,7 +9,9 @@ Initial CRAN release.
 * Re-exported the promise pipe operators `%...>%`, `%...!%`, and `%...T>%` from `promises`, so `collect()` results can be consumed in reactive contexts without attaching `promises`.
 
 ## Verbs:
-* Added `filter()`, `select()`, and `distinct()` verbs.
+* Added the `filter()` verb to subset rows by predicate expressions, evaluated client-side. Comparisons (`==`, `>`, `<`, etc.) combined with `&`/`|` are supported. Values referenced from `input` or the calling environment are resolved on the R side; column references are evaluated in the browser.
+* Added the `select()` verb to choose columns by name.
+* Added the `distinct()` verb to keep unique rows. When columns are supplied in `...` only those determine uniqueness and the first row per unique combination is kept; with no columns all columns are used. Supports `.keep_all` to retain all columns in the output.
 * Added the `mutate()` verb for adding or modifying columns using expressions. Supports both non-standard evaluation and character string inputs.
 * Added `ifelse()` support in `mutate()` expressions, translated to JavaScript ternary operators. Nested `ifelse()` calls are supported.
 * Added `if_else()` as an alias for `ifelse()` in `mutate()` expressions; both translate to JavaScript ternary operators.
@@ -29,8 +31,8 @@ Initial CRAN release.
 
 ## Documentation:
 * Added a `vignette("collect-with-promises")` covering how to handle `collect()` promises inside `reactive()`, `eventReactive()`, `observeEvent()` and `observe()`.
-* Added the `app_update_select.R` example app demonstrating both approaches, and removed `app_collect_promises.R`.
+* Added example apps under `inst/example_apps/` showcasing `jsplyr` usage, including `app_showcase.R` and `app_update_select.R`.
 
 ## CI/CD:
 * Added GitHub Actions workflows for linting (`lintr::lint_package()`), a standalone `testthat` run for fast PR feedback, test coverage reporting via `covr` with Codecov upload, and a version-bump check that fails PRs which do not bump the `DESCRIPTION` `Version`.
-* Added R-CMD-check, Lint, and Codecov badges to the README.
+* Added R-CMD-check, Lint, Codecov, and CRAN downloads badges to the README.
