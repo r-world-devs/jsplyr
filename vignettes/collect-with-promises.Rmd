@@ -40,8 +40,8 @@ instead of your rows. You handle it with `promises::then()` or the re-exported
 ## Two ways to unwrap a promise
 
 Both of these work in *any* context — `reactive()`, `eventReactive()`,
-`observeEvent()` and `observe()` alike. Pick whichever reads better; the next
-section covers where each context differs.
+`observeEvent()` and `observe()` alike. Pick whichever reads better. The
+examples below use the `%...>%` pipe.
 
 ### `promises::then()`
 
@@ -81,84 +81,75 @@ lazy_mtcars_query() |>
   })
 ```
 
-## Where to use it
+## A practical example: updating an input from a computed value
 
-The operators above are the same everywhere. What changes between contexts is
-what you do with the resulting promise: a reactive **returns** it, an observer
-**consumes** it for its side effects.
+A common task is to set the value of an input — say a `selectInput` — from a
+number computed in the browser. Functions like `shiny::updateSelectInput()` are
+**side effects**, not reactive outputs. They do not understand promises, so you
+cannot pass `collect()`'s result straight to `selected` — you would hand it a
+promise object instead of your value. Resolve the promise first and act on the
+value once it arrives.
 
-### `reactive()` / `eventReactive()` — return the promise
-
-Return the promise (optionally chained) from the reactive. Downstream consumers
-receive the promise and resolve it in turn; a render output does this
-automatically. Either operator is fine — use `%...>%` (or `then()`) when you
-want to transform the data so the reactive still returns a promise:
+The cleanest approach keeps the `updateSelectInput()` call **outside** the
+`jsplyr` pipeline. Store the resolved value in a `reactiveVal` and let a
+separate observer update the input. This decouples "compute the value" from
+"update the input":
 
 ```{r}
-# Return the promise as-is.
-collected <- shiny::reactive({
-  lazy_mtcars_query() |>
+# Holds the value computed in the browser.
+oldest_age <- shiny::reactiveVal(NULL)
+
+# Pipeline: compute max(age) and store it. No UI update here.
+shiny::observeEvent(input$update, {
+  lazy_data() |>
+    dplyr::summarise("max_age = max(age)") |>
+    dplyr::collect() %...>% {
+    oldest_age(.$max_age)
+  }
+})
+
+# Separate observer: update the input when the computed value changes.
+shiny::observeEvent(oldest_age(), {
+  shiny::updateSelectInput(
+    session,
+    inputId = "age",
+    selected = oldest_age()
+  )
+})
+```
+
+The `%...>%` pipe waits for the collected value to arrive, then `.` holds the
+result tibble so `.$max_age` is written into the `reactiveVal`. The second
+observer reacts to that change and performs the update.
+
+If you prefer to keep the computation in a reactive expression instead of an
+observer, return the collected promise from an `eventReactive()` (gated on the
+button) and resolve it in a separate `observe()`:
+
+```{r}
+# Gated on the button: returns the collect() promise. Computes only.
+oldest_age <- shiny::eventReactive(input$update, {
+  lazy_data() |>
+    dplyr::summarise("max_age = max(age)") |>
     dplyr::collect()
 })
 
-# eventReactive works the same way — it just gates on an event first.
-collected_on_click <- shiny::eventReactive(input$go, {
-  lazy_mtcars_query() |>
-    dplyr::collect()
-})
-
-# Transform inside the reactive and still return a promise.
-collected_summary <- shiny::reactive({
-  lazy_mtcars_query() |>
-    dplyr::collect() %...>%
-    head(10)
-})
-
-# A render output resolves whichever promise it receives.
-output$mtcars_tb <- DT::renderDT({
-  collected()
+# Separate observer: resolve the promise and update the input.
+shiny::observe({
+  oldest_age() %...>% {
+    shiny::updateSelectInput(
+      session,
+      inputId = "age",
+      selected = .$max_age
+    )
+  }
 })
 ```
 
-### `observeEvent()` / `observe()` — consume for side effects
+`eventReactive()` returns the promise as-is, so `oldest_age()` is a promise;
+the `observe()` resolves it with `%...>%` and updates the input. A plain
+`reactive()` works the same way if you want the value recomputed whenever its
+dependencies change rather than only on a button press.
 
-Observers have no return value, so resolve the promise and act on the result
-inside the callback. Again, either operator works:
-
-```{r}
-# With then().
-shiny::observeEvent(input$compute, {
-  lazy_mtcars_query() |>
-    dplyr::collect() |>
-    promises::then(function(df) {
-      print(head(df))
-      shiny::showNotification(paste(nrow(df), "rows collected"))
-    })
-})
-
-# With the pipe.
-shiny::observeEvent(input$compute, {
-  lazy_mtcars_query() |>
-    dplyr::collect() %...>%
-    head() %...>%
-    print()
-})
-```
-
-Add `%...!%` to catch errors from anywhere earlier in the chain — for example a
-failed round-trip or an error thrown while transforming the result:
-
-```{r}
-shiny::observeEvent(input$compute, {
-  lazy_mtcars_query() |>
-    dplyr::collect() %...>%
-    head() %...>%
-    print() %...!%
-    (function(err) {
-      shiny::showNotification(
-        paste("Failed to collect:", conditionMessage(err)),
-        type = "error"
-      )
-    })
-})
-```
+See `inst/example_apps/app_update_select.R` for a complete runnable app showing
+both approaches.
