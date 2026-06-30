@@ -24,7 +24,7 @@ test_that("compute_steps are updated in the object", {
     list(
       list(verb = "filter", params = list(expression = "age >= 30")),
       list(verb = "select", params = list(expression = "name")),
-      list(verb = "distinct", params = list(expression = character(0)))
+      list(verb = "distinct", params = list(expression = character(0), keep_all = FALSE))
     )
   )
 
@@ -176,7 +176,7 @@ test_that("distinct with columns adds compute step", {
   tbl$compute_steps <- add_distinct(tbl, "name")
   expect_equal(
     tbl$compute_steps,
-    list(list(verb = "distinct", params = list(expression = "name")))
+    list(list(verb = "distinct", params = list(expression = "name", keep_all = FALSE)))
   )
 })
 
@@ -185,7 +185,10 @@ test_that("distinct with multiple columns adds compute step", {
   tbl$compute_steps <- add_distinct(tbl, c("name", "city"))
   expect_equal(
     tbl$compute_steps,
-    list(list(verb = "distinct", params = list(expression = c("name", "city"))))
+    list(list(
+      verb = "distinct",
+      params = list(expression = c("name", "city"), keep_all = FALSE)
+    ))
   )
 })
 
@@ -194,8 +197,26 @@ test_that("distinct without columns adds compute step", {
   tbl$compute_steps <- add_distinct(tbl)
   expect_equal(
     tbl$compute_steps,
-    list(list(verb = "distinct", params = list(expression = character(0))))
+    list(list(verb = "distinct", params = list(expression = character(0), keep_all = FALSE)))
   )
+})
+
+test_that("distinct records .keep_all and prints it", {
+  tbl <- tbl_lazy_json(
+    mocked_session,
+    "mtcars",
+    compute_steps = list(compute_step(verb = "take", name = "mtcars"))
+  )
+  step <- dplyr::distinct(tbl, cyl, .keep_all = TRUE)$compute_steps |>
+    (\(s) s[[length(s)]])()
+  expect_equal(step$verb, "distinct")
+  expect_true(step$params$keep_all)
+  expect_equal(format_compute_step(step), "distinct(cyl, .keep_all = TRUE)")
+
+  default_step <- dplyr::distinct(tbl, cyl)$compute_steps |>
+    (\(s) s[[length(s)]])()
+  expect_false(default_step$params$keep_all)
+  expect_equal(format_compute_step(default_step), "distinct(cyl)")
 })
 
 test_that("collect() returns a promise", {
