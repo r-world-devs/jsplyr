@@ -17,17 +17,22 @@ reference:
   - tbl_lazy_json
   - compute.tbl_lazy_json
   - collect.tbl_lazy_json
+  - pull.tbl_lazy_json
   - show_query.tbl_lazy_json
 
 - subtitle: Affect rows
 - contents:
   - distinct.tbl_lazy_json
   - filter.tbl_lazy_json
+  - arrange.tbl_lazy_json
+  - slice.tbl_lazy_json
 
 - subtitle: Affect columns
 - contents:
   - mutate.tbl_lazy_json
   - select.tbl_lazy_json
+  - rename.tbl_lazy_json
+  - relocate.tbl_lazy_json
 
 - subtitle: Join tables
 - contents:
@@ -41,7 +46,9 @@ reference:
 - subtitle: Group and summarise
 - contents:
   - group_by.tbl_lazy_json
+  - ungroup.tbl_lazy_json
   - summarise.tbl_lazy_json
+  - count.tbl_lazy_json
 
 articles:
 - title: Articles
