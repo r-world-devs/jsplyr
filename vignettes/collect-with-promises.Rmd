@@ -104,8 +104,8 @@ shiny::observeEvent(input$update, {
   lazy_data() |>
     dplyr::summarise("max_age = max(age)") |>
     dplyr::collect() %...>% {
-      oldest_age(.$max_age)
-    }
+    oldest_age(.$max_age)
+  }
 })
 
 # Separate observer: update the input when the computed value changes.
