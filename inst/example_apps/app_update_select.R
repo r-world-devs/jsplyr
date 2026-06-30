@@ -96,7 +96,7 @@ server <- function(input, output, session) {
     # Compute max(age) in the browser, resolve the collect() promise with
     # %...>%, and store the value. No UI update happens in this pipeline.
     json_tbl() |>
-      dplyr::summarise("max_age = max(age)") |>
+      dplyr::summarise(max_age = max(age)) |>
       dplyr::collect() %...>% {
         oldest_age(.$max_age)
       }
