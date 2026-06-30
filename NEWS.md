@@ -1,3 +1,22 @@
+# jsplyr 0.0.0.9003
+
+## Verbs:
+* Added `ungroup()` to remove grouping set by `group_by()`. With no arguments all grouping is dropped; supplying column names removes only those columns from the grouping set (partial ungroup), matching `dplyr::ungroup()`.
+
+## Fixes:
+* `distinct()` now projects to the columns supplied (e.g. `distinct(city)` returns only `city`), matching `dplyr::distinct()`. Pass `.keep_all = TRUE` to retain all columns while de-duplicating on the supplied ones. Calling `distinct()` with no columns still de-duplicates whole rows.
+* Grouping state no longer leaks across separate `compute()` calls in the same browser session. Grouping is now reset once at the start of each top-level compute, scoped so the recursive evaluation of a join's right-hand side does not clear the outer pipeline's grouping.
+
+# jsplyr 0.0.0.9002
+
+## Verbs:
+* Added `arrange()` to sort rows client-side by one or more columns. Wrap a column in `desc()` for descending order; multiple keys break ties left to right and the sort is stable. `NA`/`null` values sort last.
+* Added `rename()` to rename columns with `new = old` pairs, preserving column order.
+* Added the `slice()` family: `slice()` (integer positions, negative positions drop rows), `slice_head()`/`slice_tail()` (first/last `n` or `prop`), and `slice_min()`/`slice_max()` (rows with the smallest/largest values of a column). Slicing is group-aware when the data is grouped with `group_by()`.
+* Added `pull()` to extract a single column as a vector. Like `collect()`, it returns a `promises::promise()` resolving to the vector. Supports selection by name and by position, including negative indices counting from the last column.
+* Added `count()` and `tally()`. `count()` groups by the given columns and counts rows per group; `tally()` counts within an existing `group_by()`. Both honour the `name` (default `"n"`) and `sort` arguments and reuse the `group_by()`/`summarise()` machinery.
+* Added `relocate()` to reorder columns using `.before`/`.after` placement, defaulting to moving the selected columns to the front.
+
 # jsplyr 0.0.0.9001
 
 ## CI/CD:
