@@ -1,6 +1,6 @@
 Package: jsplyr
 Title: R API to Manipulate JSON Data
-Version: 0.0.0.9004
+Version: 0.1.0
 Authors@R: c(
     person("Maciej", "Banas", , "banasmaciek@gmail.com", role = c("cre", "aut")),
     person("Krystian", "Igras", , "krystian8207@gmail.com", role = "aut")
@@ -8,6 +8,8 @@ Authors@R: c(
 Description: Provides R 'shiny' interface to manipulate data in `JSON` format 
     directly in the browser in a 'dplyr' style.
 License: MIT + file LICENSE
+URL: https://github.com/r-world-devs/jsplyr, https://r-world-devs.github.io/jsplyr/
+BugReports: https://github.com/r-world-devs/jsplyr/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Depends:
