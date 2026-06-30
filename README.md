@@ -23,8 +23,17 @@ familiar dplyr verbs you already know.
 
 # Install
 
+Install the released version from CRAN:
+
 ``` r
 install.packages("jsplyr")
+```
+
+Or install the development version from GitHub:
+
+``` r
+# install.packages("pak")
+pak::pak("r-world-devs/jsplyr")
 ```
 
 # Usage
