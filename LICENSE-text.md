@@ -1,0 +1,4 @@
+# License
+
+    YEAR: 2026
+    COPYRIGHT HOLDER: F. Hoffmann-La Roche AG

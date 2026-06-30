@@ -1,0 +1,11 @@
+{
+    "cluster": "Local",
+    "container_image": "",
+    "default_image": "",
+    "container_images": [],
+    "placement_constraints": [],
+    "queues": [],
+    "name": "jsplyr",
+    "resource_limits": [],
+    "resource_profile": "custom"
+}
