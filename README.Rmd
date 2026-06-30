@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 `jsplyr` is a JavaScript backend for [dplyr](https://github.com/tidyverse/dplyr/). Instead of manipulating data on the Shiny server, it pushes the work to the browser, where it runs on JSON data client-side. This keeps data wrangling fast and responsive even for large `data.frame`s, while letting you write the familiar dplyr verbs you already know.
 
 > `jsplyr` is still in early stages of development. To check which `dplyr` verbs are
-> supported check the [reference]() section.
+> supported check the [reference](https://r-world-devs.github.io/jsplyr/reference/index.html) section.
 
 # Install
 
