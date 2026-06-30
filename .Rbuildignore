@@ -10,3 +10,4 @@
 ^\.lintr$
 ^\.claude$
 ^\.github$
+^cran-comments\.md$
