@@ -14,6 +14,10 @@
 \code{\link[=group_by]{group_by()}} (bare names, strings, and the tidyselect helpers \code{c(...)},
 \code{all_of()}/\code{any_of()}, \code{across()}). If empty, all grouping is removed.}
 }
+\value{
+A \code{tbl_lazy_json} object with the grouping state cleared (or trimmed
+when columns are supplied), appended as a lazy compute step.
+}
 \description{
 Drops grouping previously set with \code{\link[=group_by]{group_by()}}. With no
 arguments all grouping is removed; supplying column names removes only those
@@ -25,9 +29,9 @@ verbs such as \code{\link[=summarise]{summarise()}} and the \code{\link[=slice]{
 step that clears or trims that state at compute time.
 }
 \examples{
-\dontrun{
-tbl(session, "mtcars") |>
-  group_by(cyl) |>
-  ungroup()
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    group_by(cyl) |>
+    ungroup()
 }
 }

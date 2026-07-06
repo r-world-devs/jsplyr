@@ -28,8 +28,8 @@ the browser, so it returns a \code{\link[promises:promise]{promises::promise()}}
 vector rather than returning the vector directly.
 }
 \examples{
-\dontrun{
-tbl(session, "mtcars") |>
-  pull(mpg) \%...>\% print()
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    pull(mpg) \%...>\% print()
 }
 }

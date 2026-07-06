@@ -20,6 +20,9 @@
 #'   Use `.names` with the `{.col}`/`{.fn}` glue placeholders to control the
 #'   output column names; by default a single function reuses the input name
 #'   and multiple functions produce `{.col}_{.fn}`.
+#' @return A `tbl_lazy_json` object with the column additions/modifications
+#'   appended as a lazy compute step, evaluated in the browser when the pipeline
+#'   is computed.
 #' @importFrom dplyr mutate
 #' @export
 mutate.tbl_lazy_json <- function(.data, ...) {

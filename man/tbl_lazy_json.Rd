@@ -14,6 +14,11 @@ tbl_lazy_json(session, json_name, compute_steps = list())
 \item{compute_steps}{A list of compute steps to be
 triggered when \code{compute()} is called.}
 }
+\value{
+An object of class \code{tbl_lazy_json}: a list holding the shiny
+\code{session}, a \code{state_id} keying the data in the browser, and the list of
+\code{compute_steps} to run when the pipeline is computed.
+}
 \description{
 Create a lazy JSON tbl
 }

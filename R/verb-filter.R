@@ -9,6 +9,9 @@
 #'   column, a character vector, and `all_of()`/`any_of()`. Values referenced
 #'   from `input` or the calling environment are resolved on the R side; column
 #'   references are evaluated in the browser.
+#' @return A `tbl_lazy_json` object with the filter appended as a lazy compute
+#'   step. Rows are subset in the browser when the pipeline is evaluated by
+#'   [compute()]/[collect()].
 #' @importFrom dplyr filter
 #' @export
 filter.tbl_lazy_json <- function(.data, ...) {  

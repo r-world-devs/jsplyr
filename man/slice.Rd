@@ -60,6 +60,11 @@ grouping is not applied (use \code{\link[=group_by]{group_by()}}, which slicing 
 \item{with_ties, na_rm}{Ignored. Accepted for consistency with the
 \code{slice_min()}/\code{slice_max()} generics.}
 }
+\value{
+A \code{tbl_lazy_json} object with the row selection appended as a lazy
+compute step. When the data is grouped with \code{\link[=group_by]{group_by()}}, the selection is
+applied within each group in the browser at compute time.
+}
 \description{
 The \code{slice()} family picks rows by position or by ordering on a
 column. When the data has been grouped with \code{\link[=group_by]{group_by()}}, slicing is
@@ -71,9 +76,9 @@ order rows by the given column (ascending for min, descending for max) and
 keep the first \code{n} (or \code{prop}).
 }
 \examples{
-\dontrun{
-tbl(session, "mtcars") |> slice(1, 3, 5)
-tbl(session, "mtcars") |> slice_head(n = 5)
-tbl(session, "mtcars") |> group_by(cyl) |> slice_max(mpg, n = 2)
+if (interactive()) {
+  tbl(session, "mtcars") |> slice(1, 3, 5)
+  tbl(session, "mtcars") |> slice_head(n = 5)
+  tbl(session, "mtcars") |> group_by(cyl) |> slice_max(mpg, n = 2)
 }
 }

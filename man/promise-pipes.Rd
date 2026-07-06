@@ -18,6 +18,12 @@ lhs \%...T>\% rhs
 
 \item{rhs}{A function call or expression applied to the resolved value.}
 }
+\value{
+A \code{\link[promises:promise]{promises::promise()}}. \verb{\%...>\%} resolves with the value of \code{rhs}
+applied to the fulfilled value; \verb{\%...!\%} handles a rejected promise; and
+\verb{\%...T>\%} (tee) applies \code{rhs} for its side effects and resolves with the
+original fulfilled value. See \link[promises:pipes]{promises::pipes}.
+}
 \description{
 \code{collect()} on a \code{tbl_lazy_json} returns a \code{\link[promises:promise]{promises::promise()}}, because the
 result is fetched asynchronously from the browser. These operators from the
@@ -26,15 +32,15 @@ result is fetched asynchronously from the browser. These operators from the
 yourself.
 }
 \examples{
-\dontrun{
-shiny::observeEvent(input$compute, {
-  lazy_data() |>
-    dplyr::filter(mpg >= input$min_mpg) |>
-    dplyr::collect() \%...>\% {
-      # `.` is the collected tibble
-      print(.)
-    }
-})
+if (interactive()) {
+  shiny::observeEvent(input$compute, {
+    lazy_data() |>
+      dplyr::filter(mpg >= input$min_mpg) |>
+      dplyr::collect() \%...>\% {
+        # `.` is the collected tibble
+        print(.)
+      }
+  })
 }
 }
 \keyword{internal}

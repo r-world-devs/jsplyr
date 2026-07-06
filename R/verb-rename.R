@@ -4,10 +4,12 @@
 #' @param ... Use `new_name = old_name` to rename columns. Both bare names and
 #'   character strings are accepted (e.g. `rename(mpg_new = mpg)` or
 #'   `rename("mpg_new" = "mpg")`). Column order is preserved.
+#' @return A `tbl_lazy_json` object with the rename appended as a lazy compute
+#'   step, applied in the browser when the pipeline is evaluated.
 #' @examples
-#' \dontrun{
-#' tbl(session, "mtcars") |>
-#'   rename(miles_per_gallon = mpg, cylinders = cyl)
+#' if (interactive()) {
+#'   tbl(session, "mtcars") |>
+#'     rename(miles_per_gallon = mpg, cylinders = cyl)
 #' }
 #' @importFrom dplyr rename
 #' @export

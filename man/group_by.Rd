@@ -14,6 +14,11 @@
 tidyselect helpers \code{c(...)}, \code{all_of()}/\code{any_of()}, and \code{across()}, which
 are resolved to plain column names on the R side.}
 }
+\value{
+A \code{tbl_lazy_json} object carrying the grouping as browser-side state.
+The grouping is consumed by group-aware verbs such as \code{\link[=summarise]{summarise()}},
+\code{\link[=count]{count()}}, and the \code{\link[=slice]{slice()}} family when the pipeline is evaluated.
+}
 \description{
 Group \code{JSON} data by one or more columns.
 }

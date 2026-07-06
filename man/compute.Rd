@@ -12,6 +12,12 @@
 
 \item{...}{Unused. Provided for consistency with generic.}
 }
+\value{
+A \code{tbl_lazy_json} object with a pending computation attached. It
+carries a \code{.promise} field holding a \code{\link[promises:promise]{promises::promise()}} that resolves
+when the browser posts back the computed \code{JSON}. The accumulated compute
+steps are reset so the object can be extended or collected further.
+}
 \description{
 Compute \code{JSON} data in the browser.
 }

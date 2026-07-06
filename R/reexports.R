@@ -8,18 +8,22 @@
 #'
 #' @param lhs A promise (e.g. the value returned by `collect()`).
 #' @param rhs A function call or expression applied to the resolved value.
+#' @return A [promises::promise()]. `%...>%` resolves with the value of `rhs`
+#'   applied to the fulfilled value; `%...!%` handles a rejected promise; and
+#'   `%...T>%` (tee) applies `rhs` for its side effects and resolves with the
+#'   original fulfilled value. See [promises::pipes].
 #' @name promise-pipes
 #' @keywords internal
 #' @examples
-#' \dontrun{
-#' shiny::observeEvent(input$compute, {
-#'   lazy_data() |>
-#'     dplyr::filter(mpg >= input$min_mpg) |>
-#'     dplyr::collect() %...>% {
-#'       # `.` is the collected tibble
-#'       print(.)
-#'     }
-#' })
+#' if (interactive()) {
+#'   shiny::observeEvent(input$compute, {
+#'     lazy_data() |>
+#'       dplyr::filter(mpg >= input$min_mpg) |>
+#'       dplyr::collect() %...>% {
+#'         # `.` is the collected tibble
+#'         print(.)
+#'       }
+#'   })
 #' }
 NULL
 

@@ -17,6 +17,11 @@ column names and character strings are both accepted.}
 \item{.by_group}{Ignored. Accepted for consistency with the generic;
 grouped arrange ordering is not applied for \code{tbl_lazy_json}.}
 }
+\value{
+A \code{tbl_lazy_json} object with the sort appended as a lazy compute
+step. The ordering is applied in the browser when the pipeline is
+evaluated by \code{\link[=compute]{compute()}}/\code{\link[=collect]{collect()}}.
+}
 \description{
 Arrange rows of \code{JSON} data by column values.
 }
@@ -25,8 +30,8 @@ Sorting happens in the browser and is stable across ties, so the
 original row order is preserved within equal keys.
 }
 \examples{
-\dontrun{
-tbl(session, "mtcars") |>
-  arrange(cyl, desc(mpg))
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    arrange(cyl, desc(mpg))
 }
 }

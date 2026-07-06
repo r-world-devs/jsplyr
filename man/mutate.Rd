@@ -30,6 +30,11 @@ Use \code{.names} with the \code{{.col}}/\code{{.fn}} glue placeholders to contr
 output column names; by default a single function reuses the input name
 and multiple functions produce \verb{\{.col\}_\{.fn\}}.}
 }
+\value{
+A \code{tbl_lazy_json} object with the column additions/modifications
+appended as a lazy compute step, evaluated in the browser when the pipeline
+is computed.
+}
 \description{
 Add or modify columns in \code{JSON} data.
 }

@@ -10,11 +10,13 @@
 #' @details Grouping is tracked as browser-side state consumed by group-aware
 #'   verbs such as [summarise()] and the [slice()] family. `ungroup()` appends a
 #'   step that clears or trims that state at compute time.
+#' @return A `tbl_lazy_json` object with the grouping state cleared (or trimmed
+#'   when columns are supplied), appended as a lazy compute step.
 #' @examples
-#' \dontrun{
-#' tbl(session, "mtcars") |>
-#'   group_by(cyl) |>
-#'   ungroup()
+#' if (interactive()) {
+#'   tbl(session, "mtcars") |>
+#'     group_by(cyl) |>
+#'     ungroup()
 #' }
 #' @importFrom dplyr ungroup
 #' @export

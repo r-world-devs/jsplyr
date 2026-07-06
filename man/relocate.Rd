@@ -16,6 +16,10 @@
 single column (bare name or string) to place the moved columns before or
 after it. With neither, the selected columns move to the front.}
 }
+\value{
+A \code{tbl_lazy_json} object with the column reordering appended as a lazy
+compute step, applied in the browser when the pipeline is evaluated.
+}
 \description{
 Change column order of \code{JSON} data.
 }
@@ -24,8 +28,8 @@ Reordering happens in the browser by rebuilding each row's keys in
 the new order. Columns not named in \code{...} keep their relative order.
 }
 \examples{
-\dontrun{
-tbl(session, "mtcars") |> relocate(gear, carb)
-tbl(session, "mtcars") |> relocate(mpg, .after = cyl)
+if (interactive()) {
+  tbl(session, "mtcars") |> relocate(gear, carb)
+  tbl(session, "mtcars") |> relocate(mpg, .after = cyl)
 }
 }

@@ -17,6 +17,10 @@ If empty, all columns are used.}
 (the default) and columns are supplied in \code{...}, only those columns are
 returned, matching \code{\link[dplyr:distinct]{dplyr::distinct()}}.}
 }
+\value{
+A \code{tbl_lazy_json} object with the de-duplication appended as a lazy
+compute step, applied in the browser when the pipeline is evaluated.
+}
 \description{
 Keep distinct records of \code{JSON} data.
 }

@@ -14,12 +14,16 @@
 character strings are accepted (e.g. \code{rename(mpg_new = mpg)} or
 \code{rename("mpg_new" = "mpg")}). Column order is preserved.}
 }
+\value{
+A \code{tbl_lazy_json} object with the rename appended as a lazy compute
+step, applied in the browser when the pipeline is evaluated.
+}
 \description{
 Rename columns of \code{JSON} data.
 }
 \examples{
-\dontrun{
-tbl(session, "mtcars") |>
-  rename(miles_per_gallon = mpg, cylinders = cyl)
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    rename(miles_per_gallon = mpg, cylinders = cyl)
 }
 }
