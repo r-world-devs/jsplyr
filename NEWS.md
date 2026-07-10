@@ -1,4 +1,7 @@
-# jsplyr 0.1.0.9000 (development version)
+# jsplyr 0.1.1
+
+## Bug fixes:
+* `compute()` now deregisters its HTTP endpoint once the browser posts back the result, so a long session with many `compute()`/`collect()` calls no longer accumulates dead endpoints in `session$downloads` (#15).
 
 ## Documentation:
 * Expanded the `collect()`/`pull()` docs on handling their `promises::promise()` result in reactive contexts, showing both `promises::then()` and the `%...>%` pipe.
