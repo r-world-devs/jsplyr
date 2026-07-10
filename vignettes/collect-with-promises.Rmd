@@ -34,19 +34,15 @@ Every other reactive context — `reactive()`, `eventReactive()`,
 `observeEvent()` and `observe()` — hands you the promise as-is. The value
 resolves later, so you cannot use the result of `collect()` synchronously on the
 next line; treating it as a data frame directly gives you a promise object
-instead of your rows. You handle it with `promises::then()` or the re-exported
-`%...>%` pipe.
+instead of your rows. There are two ways to unwrap it: `promises::then()` and
+the `%...>%` pipe.
 
-## Two ways to unwrap a promise
+## Unwrapping a promise with `then()`
 
-Both of these work in *any* context — `reactive()`, `eventReactive()`,
-`observeEvent()` and `observe()` alike. Pick whichever reads better. The
-examples below use the `%...>%` pipe.
-
-### `promises::then()`
-
-`then()` registers a callback that runs once the data arrives. It returns a new
-promise, so it composes:
+`then()` registers a callback that runs once the data arrives. It reads like an
+ordinary function call, returns a new promise so it composes, and works in
+*any* context — `reactive()`, `eventReactive()`, `observeEvent()` and
+`observe()` alike:
 
 ```{r}
 lazy_mtcars_query() |>
@@ -57,20 +53,25 @@ lazy_mtcars_query() |>
   })
 ```
 
-### `%...>%` pipe
-
-The `promises` package ships a "promise pipe", `%...>%`, that pipes the
-*resolved* value into the next expression. It reads just like a regular pipe but
-waits for the promise to settle first. `jsplyr` re-exports it, so you do **not**
-have to import `promises` yourself:
+Pass `onRejected` to handle errors from the promise chain:
 
 ```{r}
 lazy_mtcars_query() |>
-  dplyr::collect() %...>%
-  head()
+  dplyr::collect() |>
+  promises::then(
+    onFulfilled = function(df) head(df),
+    onRejected = function(err) {
+      shiny::showNotification(conditionMessage(err), type = "error")
+    }
+  )
 ```
 
-Use `%...!%` to handle errors from the promise chain:
+### Terser alternative: the `%...>%` pipe
+
+If you prefer an operator, the package ships a "promise pipe", `%...>%`, that
+pipes the *resolved* value into the next expression. `jsplyr` re-exports it
+(along with `%...!%` for errors), so you do **not** have to attach `promises`
+yourself. It is equivalent to the `then()` calls above, just more compact:
 
 ```{r}
 lazy_mtcars_query() |>
@@ -103,9 +104,10 @@ oldest_age <- shiny::reactiveVal(NULL)
 shiny::observeEvent(input$update, {
   lazy_data() |>
     dplyr::summarise("max_age = max(age)") |>
-    dplyr::collect() %...>% {
-    oldest_age(.$max_age)
-  }
+    dplyr::collect() |>
+    promises::then(function(df) {
+      oldest_age(df$max_age)
+    })
 })
 
 # Separate observer: update the input when the computed value changes.
@@ -118,8 +120,19 @@ shiny::observeEvent(oldest_age(), {
 })
 ```
 
-The `%...>%` pipe waits for the collected value to arrive, then `.` holds the
-result tibble so `.$max_age` is written into the `reactiveVal`. The second
+The same pipeline with the `%...>%` pipe:
+
+```{r}
+shiny::observeEvent(input$update, {
+  lazy_data() |>
+    dplyr::summarise("max_age = max(age)") |>
+    dplyr::collect() %...>%
+    (function(df) oldest_age(df$max_age))
+})
+```
+
+`then()` waits for the collected value to arrive, then its callback receives the
+result tibble so `df$max_age` is written into the `reactiveVal`. The second
 observer reacts to that change and performs the update.
 
 If you prefer to keep the computation in a reactive expression instead of an
@@ -136,18 +149,34 @@ oldest_age <- shiny::eventReactive(input$update, {
 
 # Separate observer: resolve the promise and update the input.
 shiny::observe({
-  oldest_age() %...>% {
-    shiny::updateSelectInput(
-      session,
-      inputId = "age",
-      selected = .$max_age
-    )
-  }
+  oldest_age() |>
+    promises::then(function(df) {
+      shiny::updateSelectInput(
+        session,
+        inputId = "age",
+        selected = df$max_age
+      )
+    })
+})
+```
+
+The same observer with the `%...>%` pipe:
+
+```{r}
+shiny::observe({
+  oldest_age() %...>%
+    (function(df) {
+      shiny::updateSelectInput(
+        session,
+        inputId = "age",
+        selected = df$max_age
+      )
+    })
 })
 ```
 
 `eventReactive()` returns the promise as-is, so `oldest_age()` is a promise;
-the `observe()` resolves it with `%...>%` and updates the input. A plain
+the `observe()` resolves it with `then()` and updates the input. A plain
 `reactive()` works the same way if you want the value recomputed whenever its
 dependencies change rather than only on a button press.
 

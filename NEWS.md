@@ -1,3 +1,8 @@
+# jsplyr 0.1.0.9000 (development version)
+
+## Documentation:
+* Expanded the `collect()`/`pull()` docs on handling their `promises::promise()` result in reactive contexts, showing both `promises::then()` and the `%...>%` pipe.
+
 # jsplyr 0.1.0
 
 Initial CRAN release.

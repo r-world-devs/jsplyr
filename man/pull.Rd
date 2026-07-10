@@ -29,7 +29,14 @@ vector rather than returning the vector directly.
 }
 \examples{
 if (interactive()) {
+  # promises::then() reads like a normal function call.
   tbl(session, "mtcars") |>
-    pull(mpg) \%...>\% print()
+    pull(mpg) |>
+    promises::then(print)
+
+  # Terser alternative: the \%...>\% pipe passes the resolved value on.
+  tbl(session, "mtcars") |>
+    pull(mpg) \%...>\%
+    print()
 }
 }
