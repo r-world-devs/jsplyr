@@ -1,8 +1,10 @@
 #' Promise pipe operators
 #'
 #' `collect()` on a `tbl_lazy_json` returns a [promises::promise()], because the
-#' result is fetched asynchronously from the browser. These operators from the
-#' \pkg{promises} package are re-exported so you can consume that result inside
+#' result is fetched asynchronously from the browser. One way to consume that
+#' result is [promises::then()], which reads like an ordinary function call. For
+#' users who prefer an operator, these promise pipes from the \pkg{promises}
+#' package are re-exported as a terser alternative, so you can use them inside
 #' `shiny::observeEvent()` / `shiny::observe()` without attaching \pkg{promises}
 #' yourself.
 #'
@@ -16,6 +18,15 @@
 #' @keywords internal
 #' @examples
 #' if (interactive()) {
+#'   # promises::then() reads like a normal function call.
+#'   shiny::observeEvent(input$compute, {
+#'     lazy_data() |>
+#'       dplyr::filter(mpg >= input$min_mpg) |>
+#'       dplyr::collect() |>
+#'       promises::then(function(df) print(df))
+#'   })
+#'
+#'   # Terser alternative: the %...>% pipe passes the resolved value on.
 #'   shiny::observeEvent(input$compute, {
 #'     lazy_data() |>
 #'       dplyr::filter(mpg >= input$min_mpg) |>

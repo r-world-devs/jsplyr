@@ -13,8 +13,15 @@
 #' @return A promise resolving to a vector with the column's values.
 #' @examples
 #' if (interactive()) {
+#'   # promises::then() reads like a normal function call.
 #'   tbl(session, "mtcars") |>
-#'     pull(mpg) %...>% print()
+#'     pull(mpg) |>
+#'     promises::then(print)
+#'
+#'   # Terser alternative: the %...>% pipe passes the resolved value on.
+#'   tbl(session, "mtcars") |>
+#'     pull(mpg) %...>%
+#'     print()
 #' }
 #' @importFrom dplyr pull
 #' @importFrom promises then

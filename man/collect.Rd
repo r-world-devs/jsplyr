@@ -21,5 +21,42 @@ resolves to the raw \code{JSON} string. The result is fetched asynchronously
 from the browser, so the value is a promise rather than a data frame.
 }
 \description{
-Retrieve \code{JSON} data from the browser.
+Because \code{jsplyr} keeps your data in the browser, \code{collect()}
+fetches it back over an asynchronous round-trip and therefore returns a
+\code{\link[promises:promise]{promises::promise()}}, not a data frame.
+
+Reactive \emph{outputs} such as \code{shiny::renderTable()} or \code{DT::renderDT()}
+understand promises and resolve them for you, so a plain \code{collect()} inside
+a render function works as-is. Every other reactive wrapper —
+\code{shiny::reactive()}, \code{shiny::eventReactive()}, \code{shiny::observeEvent()} and
+\code{shiny::observe()} — hands you the promise as-is, so you cannot treat the
+result as a data frame on the next line. Unwrap it first — with
+\code{\link[promises:then]{promises::then()}} or the re-exported \code{\link[=promise-pipes]{\%...>\%}} pipe —
+before using the value.
+
+See \code{vignette("collect-with-promises")} for a fuller discussion, including
+how to update inputs and other side effects from a computed value.
+}
+\examples{
+if (interactive()) {
+  # promises::then() reads like a normal function call.
+  shiny::observeEvent(input$compute, {
+    tbl(session, "mtcars") |>
+      dplyr::filter(mpg >= input$min_mpg) |>
+      dplyr::collect() |>
+      promises::then(function(df) print(df))
+  })
+
+  # Terser alternative: the \%...>\% pipe passes the resolved value on.
+  shiny::observeEvent(input$compute, {
+    tbl(session, "mtcars") |>
+      dplyr::filter(mpg >= input$min_mpg) |>
+      dplyr::collect() \%...>\%
+      print()
+  })
+}
+}
+\seealso{
+\code{vignette("collect-with-promises")} for handling \code{collect()}
+promises in reactive contexts.
 }

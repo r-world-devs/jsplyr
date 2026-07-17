@@ -161,6 +161,6 @@ shinyApp(ui, server)
 because the result is fetched asynchronously from the browser. Reactive
 outputs such as `renderDT()` resolve promises for you. In other reactive
 contexts — `reactive()`, `eventReactive()`, `observeEvent()` and
-`observe()` — you must handle the promise yourself (with
-`promises::then()` or the re-exported `%...>%` pipe). See
+`observe()` — you handle the promise yourself with `promises::then()`
+(or, more tersely, the re-exported `%...>%` pipe). See
 `vignette("collect-with-promises")` for the details.

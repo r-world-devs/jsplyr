@@ -20,15 +20,18 @@ compute.tbl_lazy_json <- function(x, ...) {
   # first promise would never resolve. A fresh id per call keeps them distinct.
   endpoint_id <- generate_id()
 
+  endpoint_name <- paste0("jsplyr_", endpoint_id)
+
   # Create a promise that resolves when JS posts the result back.
   p <- promises::promise(function(resolve, reject) {
     # Register a one-shot HTTP endpoint scoped to this session.
     url <- session$registerDataObj(
-      name = paste0("jsplyr_", endpoint_id),
+      name = endpoint_name,
       data = list(resolve = resolve),
       filterFunc = function(data, req) {
         body <- rawToChar(req$rook.input$read())
         data$resolve(body)
+        session$downloads$remove(endpoint_name)
         shiny::httpResponse(200L, "application/json", "{\"ok\":true}")
       }
     )
