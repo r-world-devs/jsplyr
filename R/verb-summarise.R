@@ -14,6 +14,9 @@
 #'   placeholders to control the output column names; by default a single
 #'   function reuses the input name and multiple functions produce
 #'   `{.col}_{.fn}`.
+#' @return A `tbl_lazy_json` object with the aggregation appended as a lazy
+#'   compute step. When evaluated it yields one row per group (or a single row
+#'   when ungrouped) with the summary columns.
 #' @importFrom dplyr summarise
 #' @export
 summarise.tbl_lazy_json <- function(.data, ...) {

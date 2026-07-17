@@ -4,6 +4,9 @@
 #' @param ... Columns to group by. Accepts bare column names as well as the
 #'   tidyselect helpers `c(...)`, `all_of()`/`any_of()`, and `across()`, which
 #'   are resolved to plain column names on the R side.
+#' @return A `tbl_lazy_json` object carrying the grouping as browser-side state.
+#'   The grouping is consumed by group-aware verbs such as [summarise()],
+#'   [count()], and the [slice()] family when the pipeline is evaluated.
 #' @importFrom dplyr group_by
 #' @export
 group_by.tbl_lazy_json <- function(.data, ...) {

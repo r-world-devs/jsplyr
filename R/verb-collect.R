@@ -3,6 +3,10 @@
 #' @param x  A `tbl_lazy_json` object.
 #' @param raw A logical, if `TRUE` returns `JSON` as character.
 #' @param ... Unused. Provided for consistency with generic.
+#' @return A [promises::promise()]. When `raw = FALSE` (the default) it resolves
+#'   to a [tibble::tibble] built from the computed `JSON`; when `raw = TRUE` it
+#'   resolves to the raw `JSON` string. The result is fetched asynchronously
+#'   from the browser, so the value is a promise rather than a data frame.
 #' @importFrom dplyr collect
 #' @importFrom promises then
 #' @export

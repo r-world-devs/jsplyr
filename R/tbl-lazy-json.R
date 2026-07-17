@@ -24,6 +24,9 @@ compute_step <- function(verb, ...) {
 #' @param json_name A character.
 #' @param compute_steps A list of compute steps to be
 #'   triggered when `compute()` is called.
+#' @return An object of class `tbl_lazy_json`: a list holding the shiny
+#'   `session`, a `state_id` keying the data in the browser, and the list of
+#'   `compute_steps` to run when the pipeline is computed.
 #' @export
 tbl_lazy_json <- function(session, json_name, compute_steps = list()) {
 

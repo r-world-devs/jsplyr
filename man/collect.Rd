@@ -14,6 +14,12 @@
 
 \item{raw}{A logical, if \code{TRUE} returns \code{JSON} as character.}
 }
+\value{
+A \code{\link[promises:promise]{promises::promise()}}. When \code{raw = FALSE} (the default) it resolves
+to a \link[tibble:tibble]{tibble::tibble} built from the computed \code{JSON}; when \code{raw = TRUE} it
+resolves to the raw \code{JSON} string. The result is fetched asynchronously
+from the browser, so the value is a promise rather than a data frame.
+}
 \description{
 Retrieve \code{JSON} data from the browser.
 }

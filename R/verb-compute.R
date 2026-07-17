@@ -2,6 +2,10 @@
 #' @name compute
 #' @param x A `tbl_lazy_json` object.
 #' @param ... Unused. Provided for consistency with generic.
+#' @return A `tbl_lazy_json` object with a pending computation attached. It
+#'   carries a `.promise` field holding a [promises::promise()] that resolves
+#'   when the browser posts back the computed `JSON`. The accumulated compute
+#'   steps are reset so the object can be extended or collected further.
 #' @importFrom dplyr compute
 #' @importFrom promises promise
 #' @export

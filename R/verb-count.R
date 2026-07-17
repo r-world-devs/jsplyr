@@ -11,11 +11,14 @@
 #'   `tbl_lazy_json`. Supplying a non-`NULL` value raises an error.
 #' @param sort If `TRUE`, order the result by the count column descending.
 #' @param name Name of the count column in the output. `NULL` uses `"n"`.
+#' @return A `tbl_lazy_json` object with the count appended as a lazy compute
+#'   step. When evaluated it yields one row per group with the count column
+#'   (named by `name`, default `"n"`) added.
 #' @examples
-#' \dontrun{
-#' tbl(session, "mtcars") |> count(cyl)
-#' tbl(session, "mtcars") |> count(cyl, sort = TRUE)
-#' tbl(session, "mtcars") |> group_by(cyl) |> tally()
+#' if (interactive()) {
+#'   tbl(session, "mtcars") |> count(cyl)
+#'   tbl(session, "mtcars") |> count(cyl, sort = TRUE)
+#'   tbl(session, "mtcars") |> group_by(cyl) |> tally()
 #' }
 #' @importFrom dplyr count
 #' @export

@@ -23,6 +23,11 @@ same inputs as \code{\link[=group_by]{group_by()}}.}
 
 \item{name}{Name of the count column in the output. \code{NULL} uses \code{"n"}.}
 }
+\value{
+A \code{tbl_lazy_json} object with the count appended as a lazy compute
+step. When evaluated it yields one row per group with the count column
+(named by \code{name}, default \code{"n"}) added.
+}
 \description{
 \code{count()} groups the data by the given columns and counts the
 rows in each group. \code{tally()} counts rows for the existing grouping set by
@@ -30,9 +35,9 @@ rows in each group. \code{tally()} counts rows for the existing grouping set by
 \code{\link[=group_by]{group_by()}}/\code{\link[=summarise]{summarise()}} machinery and run in the browser.
 }
 \examples{
-\dontrun{
-tbl(session, "mtcars") |> count(cyl)
-tbl(session, "mtcars") |> count(cyl, sort = TRUE)
-tbl(session, "mtcars") |> group_by(cyl) |> tally()
+if (interactive()) {
+  tbl(session, "mtcars") |> count(cyl)
+  tbl(session, "mtcars") |> count(cyl, sort = TRUE)
+  tbl(session, "mtcars") |> group_by(cyl) |> tally()
 }
 }

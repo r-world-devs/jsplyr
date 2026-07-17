@@ -12,9 +12,9 @@
 #' @param ... Unused. Provided for consistency with the generic.
 #' @return A promise resolving to a vector with the column's values.
 #' @examples
-#' \dontrun{
-#' tbl(session, "mtcars") |>
-#'   pull(mpg) %...>% print()
+#' if (interactive()) {
+#'   tbl(session, "mtcars") |>
+#'     pull(mpg) %...>% print()
 #' }
 #' @importFrom dplyr pull
 #' @importFrom promises then

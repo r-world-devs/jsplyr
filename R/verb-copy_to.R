@@ -3,6 +3,10 @@
 #' @param df A local `data.frame` or a name of the
 #'   JSON data in the browser.
 #' @param ... Unused. Provided for consistency with generic.
+#' @return Invisibly, a `tbl_lazy_json` object referencing the data now
+#'   registered in the browser, ready to be piped into the data manipulation
+#'   verbs. Called primarily for the side effect of sending the data to the
+#'   client.
 #' @importFrom dplyr copy_to
 #' @export
 copy_to.ShinySession <- function(dest, df, ...) {

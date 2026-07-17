@@ -2,6 +2,8 @@
 #' @title Select columns from `JSON` data.
 #' @param .data A `tbl_lazy_json` object.
 #' @param ... Column names.
+#' @return A `tbl_lazy_json` object with the column selection appended as a lazy
+#'   compute step, applied in the browser when the pipeline is evaluated.
 #' @importFrom dplyr select
 #' @export
 select.tbl_lazy_json <- function(.data, ...) {

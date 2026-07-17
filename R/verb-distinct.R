@@ -6,6 +6,8 @@
 #' @param .keep_all If `TRUE`, keep all columns in the output. When `FALSE`
 #'   (the default) and columns are supplied in `...`, only those columns are
 #'   returned, matching [dplyr::distinct()].
+#' @return A `tbl_lazy_json` object with the de-duplication appended as a lazy
+#'   compute step, applied in the browser when the pipeline is evaluated.
 #' @importFrom dplyr distinct
 #' @export
 distinct.tbl_lazy_json <- function(.data, ..., .keep_all = FALSE) {

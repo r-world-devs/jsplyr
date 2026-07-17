@@ -12,6 +12,10 @@
 
 \item{...}{Column names.}
 }
+\value{
+A \code{tbl_lazy_json} object with the column selection appended as a lazy
+compute step, applied in the browser when the pipeline is evaluated.
+}
 \description{
 Select columns from \code{JSON} data.
 }

@@ -12,6 +12,10 @@
 
 \item{...}{Filtering expressions.}
 }
+\value{
+The \code{tbl_lazy_json} object \code{x}, invisibly. Called for the side effect
+of printing the accumulated compute steps to the console.
+}
 \description{
 Present computation steps.
 }

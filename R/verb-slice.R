@@ -20,11 +20,14 @@
 #' @details All slicing is evaluated in the browser. `slice_min()`/`slice_max()`
 #'   order rows by the given column (ascending for min, descending for max) and
 #'   keep the first `n` (or `prop`).
+#' @return A `tbl_lazy_json` object with the row selection appended as a lazy
+#'   compute step. When the data is grouped with [group_by()], the selection is
+#'   applied within each group in the browser at compute time.
 #' @examples
-#' \dontrun{
-#' tbl(session, "mtcars") |> slice(1, 3, 5)
-#' tbl(session, "mtcars") |> slice_head(n = 5)
-#' tbl(session, "mtcars") |> group_by(cyl) |> slice_max(mpg, n = 2)
+#' if (interactive()) {
+#'   tbl(session, "mtcars") |> slice(1, 3, 5)
+#'   tbl(session, "mtcars") |> slice_head(n = 5)
+#'   tbl(session, "mtcars") |> group_by(cyl) |> slice_max(mpg, n = 2)
 #' }
 #' @importFrom dplyr slice
 #' @export

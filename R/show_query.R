@@ -2,6 +2,8 @@
 #' @title Present computation steps.
 #' @param x A `tbl_lazy_json` object.
 #' @param ... Filtering expressions.
+#' @return The `tbl_lazy_json` object `x`, invisibly. Called for the side effect
+#'   of printing the accumulated compute steps to the console.
 #' @importFrom dplyr show_query
 #' @export
 show_query.tbl_lazy_json <- function(x, ...) {

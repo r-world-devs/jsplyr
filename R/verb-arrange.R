@@ -8,10 +8,13 @@
 #'   grouped arrange ordering is not applied for `tbl_lazy_json`.
 #' @details Sorting happens in the browser and is stable across ties, so the
 #'   original row order is preserved within equal keys.
+#' @return A `tbl_lazy_json` object with the sort appended as a lazy compute
+#'   step. The ordering is applied in the browser when the pipeline is
+#'   evaluated by [compute()]/[collect()].
 #' @examples
-#' \dontrun{
-#' tbl(session, "mtcars") |>
-#'   arrange(cyl, desc(mpg))
+#' if (interactive()) {
+#'   tbl(session, "mtcars") |>
+#'     arrange(cyl, desc(mpg))
 #' }
 #' @importFrom dplyr arrange
 #' @export

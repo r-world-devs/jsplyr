@@ -19,6 +19,11 @@ column, a character vector, and \code{all_of()}/\code{any_of()}. Values referenc
 from \code{input} or the calling environment are resolved on the R side; column
 references are evaluated in the browser.}
 }
+\value{
+A \code{tbl_lazy_json} object with the filter appended as a lazy compute
+step. Rows are subset in the browser when the pipeline is evaluated by
+\code{\link[=compute]{compute()}}/\code{\link[=collect]{collect()}}.
+}
 \description{
 Add filter to \code{JSON} data.
 }
