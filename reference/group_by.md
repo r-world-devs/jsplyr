@@ -20,3 +20,13 @@ group_by(.data, ...)
   Columns to group by. Accepts bare column names as well as the
   tidyselect helpers `c(...)`, `all_of()`/`any_of()`, and `across()`,
   which are resolved to plain column names on the R side.
+
+## Value
+
+A `tbl_lazy_json` object carrying the grouping as browser-side state.
+The grouping is consumed by group-aware verbs such as
+[`summarise()`](https://r-world-devs.github.io/jsplyr/reference/summarise.md),
+[`count()`](https://r-world-devs.github.io/jsplyr/reference/count.md),
+and the
+[`slice()`](https://r-world-devs.github.io/jsplyr/reference/slice.md)
+family when the pipeline is evaluated.

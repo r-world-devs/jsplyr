@@ -42,8 +42,8 @@ A promise resolving to a vector with the column's values.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-tbl(session, "mtcars") |>
-  pull(mpg) %...>% print()
-} # }
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    pull(mpg) %...>% print()
+}
 ```

@@ -27,6 +27,12 @@ arrange(.data, ..., .by_group = FALSE)
   Ignored. Accepted for consistency with the generic; grouped arrange
   ordering is not applied for `tbl_lazy_json`.
 
+## Value
+
+A `tbl_lazy_json` object with the sort appended as a lazy compute step.
+The ordering is applied in the browser when the pipeline is evaluated by
+[`compute()`](https://r-world-devs.github.io/jsplyr/reference/compute.md)/[`collect()`](https://r-world-devs.github.io/jsplyr/reference/collect.md).
+
 ## Details
 
 Sorting happens in the browser and is stable across ties, so the
@@ -35,8 +41,8 @@ original row order is preserved within equal keys.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-tbl(session, "mtcars") |>
-  arrange(cyl, desc(mpg))
-} # }
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    arrange(cyl, desc(mpg))
+}
 ```

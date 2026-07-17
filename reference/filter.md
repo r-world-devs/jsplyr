@@ -26,3 +26,9 @@ filter(.data, ...)
   column, a character vector, and `all_of()`/`any_of()`. Values
   referenced from `input` or the calling environment are resolved on the
   R side; column references are evaluated in the browser.
+
+## Value
+
+A `tbl_lazy_json` object with the filter appended as a lazy compute
+step. Rows are subset in the browser when the pipeline is evaluated by
+[`compute()`](https://r-world-devs.github.io/jsplyr/reference/compute.md)/[`collect()`](https://r-world-devs.github.io/jsplyr/reference/collect.md).

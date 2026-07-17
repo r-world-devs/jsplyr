@@ -84,6 +84,14 @@ slice_max(
   Ignored. Accepted for consistency with the `slice_min()`/`slice_max()`
   generics.
 
+## Value
+
+A `tbl_lazy_json` object with the row selection appended as a lazy
+compute step. When the data is grouped with
+[`group_by()`](https://r-world-devs.github.io/jsplyr/reference/group_by.md),
+the selection is applied within each group in the browser at compute
+time.
+
 ## Details
 
 All slicing is evaluated in the browser. `slice_min()`/`slice_max()`
@@ -93,9 +101,9 @@ and keep the first `n` (or `prop`).
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-tbl(session, "mtcars") |> slice(1, 3, 5)
-tbl(session, "mtcars") |> slice_head(n = 5)
-tbl(session, "mtcars") |> group_by(cyl) |> slice_max(mpg, n = 2)
-} # }
+if (interactive()) {
+  tbl(session, "mtcars") |> slice(1, 3, 5)
+  tbl(session, "mtcars") |> slice_head(n = 5)
+  tbl(session, "mtcars") |> group_by(cyl) |> slice_max(mpg, n = 2)
+}
 ```

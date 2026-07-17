@@ -9,13 +9,14 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/r-world-devs/jsplyr/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/r-world-devs/jsplyr/blob/main/DESCRIPTION)
 
-Banas M, Igras K (2026). *jsplyr: R API to Manipulate JSON Data*. R
-package version 0.1.0, <https://github.com/r-world-devs/jsplyr>.
+Banas M, Igras K (2026). *jsplyr: Manipulate 'JSON' Data in the Browser
+with a 'dplyr' Interface*. R package version 0.1.0,
+<https://github.com/r-world-devs/jsplyr>.
 
     @Manual{,
-      title = {jsplyr: R API to Manipulate JSON Data},
+      title = {jsplyr: Manipulate 'JSON' Data in the Browser with a 'dplyr' Interface},
       author = {Maciej Banas and Krystian Igras},
       year = {2026},
       note = {R package version 0.1.0},

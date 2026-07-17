@@ -9,7 +9,8 @@ familiar dplyr verbs you already know.
 
 > `jsplyr` is still in early stages of development. To check which
 > `dplyr` verbs are supported check the
-> [reference](https://r-world-devs.github.io/jsplyr/) section.
+> [reference](https://r-world-devs.github.io/jsplyr/reference/index.html)
+> section.
 
 # Install
 

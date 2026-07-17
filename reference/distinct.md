@@ -25,3 +25,8 @@ distinct(.data, ..., .keep_all = FALSE)
   and columns are supplied in `...`, only those columns are returned,
   matching
   [`dplyr::distinct()`](https://dplyr.tidyverse.org/reference/distinct.html).
+
+## Value
+
+A `tbl_lazy_json` object with the de-duplication appended as a lazy
+compute step, applied in the browser when the pipeline is evaluated.

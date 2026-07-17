@@ -21,11 +21,16 @@ rename(.data, ...)
   character strings are accepted (e.g. `rename(mpg_new = mpg)` or
   `rename("mpg_new" = "mpg")`). Column order is preserved.
 
+## Value
+
+A `tbl_lazy_json` object with the rename appended as a lazy compute
+step, applied in the browser when the pipeline is evaluated.
+
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-tbl(session, "mtcars") |>
-  rename(miles_per_gallon = mpg, cylinders = cyl)
-} # }
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    rename(miles_per_gallon = mpg, cylinders = cyl)
+}
 ```

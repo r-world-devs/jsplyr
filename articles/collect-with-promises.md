@@ -9,8 +9,8 @@ frame**.
 
 Reactive *outputs* such as
 [`shiny::renderTable()`](https://rdrr.io/pkg/shiny/man/renderTable.html)
-or [`DT::renderDT()`](https://rdrr.io/pkg/DT/man/dataTableOutput.html)
-understand promises and resolve them for you, which is why a plain
+or `DT::renderDT()` understand promises and resolve them for you, which
+is why a plain
 [`collect()`](https://r-world-devs.github.io/jsplyr/reference/collect.md)
 inside a render function “just works”:
 

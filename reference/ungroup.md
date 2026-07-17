@@ -27,6 +27,11 @@ ungroup(x, ...)
   (bare names, strings, and the tidyselect helpers `c(...)`,
   `all_of()`/`any_of()`, `across()`). If empty, all grouping is removed.
 
+## Value
+
+A `tbl_lazy_json` object with the grouping state cleared (or trimmed
+when columns are supplied), appended as a lazy compute step.
+
 ## Details
 
 Grouping is tracked as browser-side state consumed by group-aware verbs
@@ -40,9 +45,9 @@ compute time.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-tbl(session, "mtcars") |>
-  group_by(cyl) |>
-  ungroup()
-} # }
+if (interactive()) {
+  tbl(session, "mtcars") |>
+    group_by(cyl) |>
+    ungroup()
+}
 ```

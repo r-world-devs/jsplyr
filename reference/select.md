@@ -18,3 +18,8 @@ select(.data, ...)
 - ...:
 
   Column names.
+
+## Value
+
+A `tbl_lazy_json` object with the column selection appended as a lazy
+compute step, applied in the browser when the pipeline is evaluated.

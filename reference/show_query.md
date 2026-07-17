@@ -18,3 +18,8 @@ show_query(x, ...)
 - ...:
 
   Filtering expressions.
+
+## Value
+
+The `tbl_lazy_json` object `x`, invisibly. Called for the side effect of
+printing the accumulated compute steps to the console.

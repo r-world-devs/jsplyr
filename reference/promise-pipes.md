@@ -31,17 +31,27 @@ lhs %...T>% rhs
 
   A function call or expression applied to the resolved value.
 
+## Value
+
+A
+[`promises::promise()`](https://rstudio.github.io/promises/reference/promise.html).
+`%...>%` resolves with the value of `rhs` applied to the fulfilled
+value; `%...!%` handles a rejected promise; and `%...T>%` (tee) applies
+`rhs` for its side effects and resolves with the original fulfilled
+value. See
+[promises::pipes](https://rstudio.github.io/promises/reference/pipes.html).
+
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-shiny::observeEvent(input$compute, {
-  lazy_data() |>
-    dplyr::filter(mpg >= input$min_mpg) |>
-    dplyr::collect() %...>% {
-      # `.` is the collected tibble
-      print(.)
-    }
-})
-} # }
+if (interactive()) {
+  shiny::observeEvent(input$compute, {
+    lazy_data() |>
+      dplyr::filter(mpg >= input$min_mpg) |>
+      dplyr::collect() %...>% {
+        # `.` is the collected tibble
+        print(.)
+      }
+  })
+}
 ```

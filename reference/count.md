@@ -42,12 +42,18 @@ tally(x, wt = NULL, sort = FALSE, name = NULL)
 
   Name of the count column in the output. `NULL` uses `"n"`.
 
+## Value
+
+A `tbl_lazy_json` object with the count appended as a lazy compute step.
+When evaluated it yields one row per group with the count column (named
+by `name`, default `"n"`) added.
+
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-tbl(session, "mtcars") |> count(cyl)
-tbl(session, "mtcars") |> count(cyl, sort = TRUE)
-tbl(session, "mtcars") |> group_by(cyl) |> tally()
-} # }
+if (interactive()) {
+  tbl(session, "mtcars") |> count(cyl)
+  tbl(session, "mtcars") |> count(cyl, sort = TRUE)
+  tbl(session, "mtcars") |> group_by(cyl) |> tally()
+}
 ```

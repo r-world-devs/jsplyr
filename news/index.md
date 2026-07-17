@@ -2,6 +2,8 @@
 
 ## jsplyr 0.1.0
 
+CRAN release: 2026-07-16
+
 Initial CRAN release.
 
 ### Core interface:
@@ -172,8 +174,7 @@ Initial CRAN release.
 
 ### CI/CD:
 
-- Added GitHub Actions workflows for linting
-  ([`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html)),
+- Added GitHub Actions workflows for linting (`lintr::lint_package()`),
   a standalone `testthat` run for fast PR feedback, test coverage
   reporting via `covr` with Codecov upload, and a version-bump check
   that fails PRs which do not bump the `DESCRIPTION` `Version`.
